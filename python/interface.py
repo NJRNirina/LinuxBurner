@@ -3,11 +3,12 @@ from ram import get_ram
 
 def afficher_ram ():
     totale_ram,ram_disponible,ram_utilisee,ram_cache,ram_swap = get_ram()
-    label_ram_totale.config(text=f"RAM totale : {totale_ram}")
-    label_ram_disponible.config(text=f"RAM disponible : {ram_disponible}")
-    label_ram_utilisee.config(text=f"RAM utilisée : {ram_utilisee}")
-    label_ram_cache.config(text=f"RAM cache : {ram_button}")
-    label_ram_swap.config(text=f"RAM swap : {ram_swap}")
+    label_ram_totale.config(text=f"RAM totale : {totale_ram} Go")
+    label_ram_disponible.config(text=f"RAM disponible be : {ram_disponible} Go")
+    label_ram_utilisee.config(text=f"RAM utilisée : {ram_utilisee} Go")
+    label_ram_cache.config(text=f"RAM cache : {ram_cache} Go")
+    label_ram_swap.config(text=f"RAM swap : {ram_swap} Go")
+    window.after(1000,afficher_ram)
     
     
 
@@ -34,7 +35,7 @@ nav_bar.pack_propagate(False)#amzay tsy miova en foncion anle texte le barre
 logo_text=Label(nav_bar,text="Etat système",padx=40,font=("Fixedsys",16,"bold"))#tokony sary no eo 
 logo_text.pack(side=LEFT)
 #boutons dans la barre
-ram_button=Button(nav_bar,text="RAM",bg=second_fond,bd=0,fg=button_color_text,padx=100)
+ram_button=Button(nav_bar,text="RAM",bg=second_fond,bd=0,fg=button_color_text,padx=100,command=afficher_ram)
 ram_button.pack(side=LEFT,fill=Y)
 
 cpu_button=Button(nav_bar,text="CPU",bg=second_fond,bd=0,fg=button_color_text,padx=100)
@@ -48,7 +49,15 @@ network_button.pack(side=LEFT,fill=Y)
 main_frame=Frame(window,background=black_background)
 main_frame.pack(fill=BOTH,expand=True)
 
-#cretaion label
-label_ram_totale=Label(main_frame,text="RAM totale : ",bg=black_background,fg=text_colors, font=("Fixedsys", 14))
-label_ram_totale.pack(pady=50)
+#creation label de RAM 
+label_ram_totale=Label(main_frame,bg=black_background,fg=text_colors, font=("Fixedsys", 14))
+label_ram_totale.pack(pady=10)
+label_ram_disponible=Label(main_frame,bg=black_background,fg=text_colors,font=("Fixedsys",14))
+label_ram_disponible.pack(pady=10)
+label_ram_utilisee=Label(main_frame,bg=black_background,fg=text_colors, font=("Fixedsys", 14))
+label_ram_utilisee.pack(pady=10)
+label_ram_cache=Label(main_frame,bg=black_background,fg=text_colors, font=("Fixedsys", 14))
+label_ram_cache.pack(pady=10)
+label_ram_swap=Label(main_frame,bg=black_background,fg=text_colors, font=("Fixedsys", 14))
+label_ram_swap.pack(pady=10)
 window.mainloop()
