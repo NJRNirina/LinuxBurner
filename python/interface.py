@@ -4,11 +4,11 @@ from ram import get_ram
 
 def afficher_ram ():
     totale_ram,ram_disponible,ram_utilisee,ram_cache,ram_swap = get_ram()
-    label_ram_totale.config(text=f"RAM totale : {totale_ram} Go")
-    label_ram_disponible.config(text=f"RAM disponible be : {ram_disponible} Go")
-    label_ram_utilisee.config(text=f"RAM utilisée : {ram_utilisee} Go")
-    label_ram_cache.config(text=f"RAM cache : {ram_cache} Go")
-    label_ram_swap.config(text=f"RAM swap : {ram_swap} Go")
+    label_ram_totale.config(text=totale_ram)
+    label_ram_disponible.config(text=ram_disponible)
+    label_ram_utilisee.config(text=ram_utilisee)
+    label_ram_cache.config(text=ram_cache)
+    label_ram_swap.config(text= ram_swap)
     #pourcentage_ram=ram_utilisee*100/totale_ram
     window.after(1000,afficher_ram)
     
@@ -52,6 +52,10 @@ network_button.pack(side=LEFT,fill=Y)
 #zone centrale
 main_frame=Frame(window,background=black_background)
 main_frame.pack(fill=BOTH,expand=True)
+#sous blocs
+card_totale=Frame(main_frame,background=black_background,bd=10)
+card_totale.pack(side=LEFT)
+titre_total=Label(card_totale,text="TOTALE",bg=second_fond,fg=text_colors,font=("Helvetica"))
 
 #creation label de RAM 
 label_ram_totale=Label(main_frame,bg=black_background,fg=text_colors, font=("Fixedsys", 14))
