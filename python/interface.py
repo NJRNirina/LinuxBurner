@@ -34,17 +34,19 @@ logo_text=Label(nav_bar,text="Etat système",padx=40,font=("Fixedsys",16,"bold")
 logo_text.pack(side=LEFT)
 
 #boutons dans la barre
-ram_button=Button(nav_bar,text="RAM",bg=second_fond,bd=0,fg=button_color_text,padx=100,command=afficher_ram,
-                  activebackground=second_fond,activeforeground=text_colors)
+#activebackground=supprime le flash blanc au clic
+#aciveforeground=texte blanc au clic
+ram_button=Button(nav_bar,text="RAM",bg=second_fond,bd=0,fg=button_color_text,padx=110,command=afficher_ram,relief=FLAT,
+                  activebackground=second_fond,activeforeground=text_colors,font=("Helvetica",11),cursor="hand2")
 ram_button.pack(side=LEFT,fill=Y)
-cpu_button=Button(nav_bar,text="CPU",bg=second_fond,bd=0,fg=button_color_text,padx=100,
-                  activebackground=second_fond,activeforeground=text_colors)
+cpu_button=Button(nav_bar,text="CPU",bg=second_fond,bd=0,fg=button_color_text,padx=110,
+                  activebackground=second_fond,activeforeground=text_colors,font=("Helvetica",11),cursor="hand2")
 cpu_button.pack(side=LEFT,fill=Y)
-disk_button=Button(nav_bar,text="DISQUE",bg=second_fond,bd=0,fg=button_color_text,padx=100,
-                   activebackground=second_fond,activeforeground=text_colors)
+disk_button=Button(nav_bar,text="DISQUE",bg=second_fond,bd=0,fg=button_color_text,padx=110,
+                   activebackground=second_fond,activeforeground=text_colors,font=("Helvetica",11),cursor="hand2")
 disk_button.pack(fill=Y,side=LEFT)
-network_button=Button(nav_bar,text="RÉSEAU",bg=second_fond,fg=button_color_text,padx=100,
-                      activebackground=second_fond,activeforeground=text_colors)
+network_button=Button(nav_bar,text="RÉSEAU",bg=second_fond,bd=0,fg=button_color_text,padx=110,
+                      activebackground=second_fond,activeforeground=text_colors,font=("Helvetica",11),cursor="hand2")
 network_button.pack(side=LEFT,fill=Y)
 
 #zone centrale
