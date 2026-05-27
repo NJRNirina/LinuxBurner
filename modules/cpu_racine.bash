@@ -4,7 +4,7 @@
 	#recherche des informations sur le modele du cpu sur /proc/cpuinfo
 		Model=$(awk '/model name/{print $k}'  /proc/cpuinfo|cut -d ":" -f2 |head -1)
 		
-		#nombre de coeur du cpu
+		#nombre de coeur du cpu sur le fichier /proc/cpuinfo
 	
 		core=$(awk '/siblings/{print $3}' /proc/cpuinfo |head -1)	
 	#utilisation de lm -sensors pour la temperature du cpu en 6cores seulement 
