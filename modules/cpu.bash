@@ -12,7 +12,7 @@
 		cpu_heat=$(sensors | grep -E "(Core)" ) #utilisation de lm-sensors pour l'affichage de la temperature
 		#traitement de donnee sur ps
 
-		cpu_usage_per_cmd=$(ps u|awk '{print $3 "  " $11  }'|awk ' $1 >= 1 &&  $1 < 100  {print $k}') 
+		cpu_usage_per_cmd=$(top -bn1|awk '{print $9 "  " $12  }'|awk ' $1 >= 1 &&  $1 < 100  {print $k}') 
 		#traitement de donnee sur top 
 		#
 		cpu_usage=$(top -bn1 |grep "Cpu(s)"|awk '{print $2}')
@@ -25,6 +25,7 @@
        		echo "$cpu_heat"
 		echo "commande important"
 		echo "$cpu_usage_per_cmd"
+
 
 
 
