@@ -8,7 +8,7 @@ def afficher_ram():
     #centre
     cards_frame = Frame(main_frame, bg=black_background)
     cards_frame.place(relx=0.5, rely=0.3, anchor=CENTER)
-    #sous blocs
+    #sous blocs de ram 
     card_totale=Frame(cards_frame,background=second_fond)
     card_totale.pack(side=LEFT,padx=8,pady=20)
     card_disponible=Frame(cards_frame,bg=second_fond)
