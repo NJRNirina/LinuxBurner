@@ -1,13 +1,38 @@
 from tkinter import *
 import matplotlib #fanaovana graphique
+matplotlib.use("TkAgg") #manala fenetre ephemre
+import matplotlib.pyplot as plt
+import matplotlib.animation as animation
 from ram import get_ram
+from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
+
+running=False  # pour annuler la boucle d'affichage
+black_background="#1A1A1A"
+text_colors="#F0F0F0"
+second_fond="#242424"
+accent_blue = "#2979FF"
+button_color_text="#888888"
+window=Tk()
+icone_barre=PhotoImage(file="../assets/icones/monitoring.png").subsample(10)#sary
+# Variables globales pour le graphique
+ax_graphique = None
+canvas_graphique=None
+ligne_graphique=None
 def afficher_ram():
     global label_ram_totale, label_ram_disponible, label_ram_utilisee, label_ram_cache, label_ram_swap
-    for widget in main_frame.winfo_children():
+    global ax_graphique, ligne_graphique, canvas_graphique
+    global main_frame
+    global running
+    running=False
+    plt.close('all')
+    if hasattr(update_ram, "historique"):
+        del update_ram.historique
+        del update_ram.temps
+    for widget in main_frame.winfo_children():#supprime les frames
         widget.destroy()
     #centre
     cards_frame = Frame(main_frame, bg=black_background)
-    cards_frame.place(relx=0.5, rely=0.3, anchor=CENTER)
+    cards_frame.place(relx=0.5, rely=0.2, anchor=CENTER)
 
     #sous blocs de ram 
     card_totale=Frame(cards_frame,background=second_fond)
@@ -20,6 +45,22 @@ def afficher_ram():
     card_cache.pack(side=LEFT,padx=8,pady=20)
     card_swap=Frame(cards_frame,bg=second_fond)
     card_swap.pack(side=LEFT,padx=8,pady=20)
+    
+    #frame pour le graphique
+    frame_graphique=Frame(main_frame,bg=black_background)
+    frame_graphique.pack(side=BOTTOM, fill=BOTH, expand=True, pady=20)
+    fig=plt.figure(figsize=(8,3),dpi=100,facecolor=black_background)
+    canvas_graphique = FigureCanvasTkAgg(fig, master=frame_graphique)
+    canvas_graphique.get_tk_widget().pack(fill=BOTH, expand=True)
+    ax=fig.add_subplot(1,1,1)
+    ax.set_facecolor(second_fond)
+    ax.set_title("Utilisation de la RAM", color=text_colors)
+    ax.set_xlabel("Temps (secondes)", color=text_colors)
+    ax.set_ylabel("Go", color=text_colors)
+    #la courbe
+    ligne, = ax.plot([],[], 'g-', linewidth=2)
+    ax_graphique = ax
+    ligne_graphique = ligne
 
     titre_totale=Label(card_totale,text="TOTALE",bg=second_fond,fg=text_colors,font=("Helvetica"))
     titre_totale.pack(anchor=W)
@@ -42,27 +83,44 @@ def afficher_ram():
     label_ram_cache.pack(pady=10)
     label_ram_swap=Label(card_swap,bg=second_fond,fg=text_colors, font=("Fixedsys", 14))
     label_ram_swap.pack(pady=10)
+    running=True
     update_ram()
 
 def update_ram ():
+    global running
+    if not running:
+        return
+    global ax_graphique, ligne_graphique, canvas_graphique
     global label_ram_totale, label_ram_disponible, label_ram_utilisee, label_ram_cache, label_ram_swap # amzay hitan'i fonction rehetra
     totale_ram, ram_disponible, ram_utilisee, ram_cache, ram_swap = get_ram()
-    totale_ram,ram_disponible,ram_utilisee,ram_cache,ram_swap = get_ram()
+    totale_ram = float(str(totale_ram).replace(',', '.'))
+    ram_disponible = float(str(ram_disponible).replace(',', '.'))
+    ram_utilisee = float(str(ram_utilisee).replace(',', '.'))
+    ram_cache = float(str(ram_cache).replace(',', '.'))
+    ram_swap = float(str(ram_swap).replace(',', '.'))
+    #mise à jour des labels
     label_ram_totale.config(text=f"{totale_ram} Go")
     label_ram_disponible.config(text=f"{ram_disponible} Go")
     label_ram_utilisee.config(text=f"{ram_utilisee} Go")
     label_ram_cache.config(text=f"{ram_cache} Go")
     label_ram_swap.config(text=f"{ram_swap} Go")
     #pourcentage_ram=ram_utilisee*100/totale_ram
-    window.after(1000,update_ram)
+    if not hasattr(update_ram, "historique"):
+        update_ram.historique = []  # Liste pour stocker les valeurs
+        update_ram.temps = []       # Liste pour stocker les temps
+    update_ram.historique.append(ram_utilisee)
+    update_ram.temps.append(len(update_ram.temps))
+    if len(update_ram.historique) > 60:
+        update_ram.historique.pop(0)
+        update_ram.temps.pop(0)
+    ligne_graphique.set_data(update_ram.temps, update_ram.historique) #met à jour la courbe
+    #limite du graphique
+    ax_graphique.set_xlim(0, max(60, len(update_ram.temps)))
+    ax_graphique.set_ylim(0, max(update_ram.historique) + 1 if update_ram.historique else 10)
+    canvas_graphique.draw_idle()#rafraichit l'affichage
+    window.after(1000, update_ram)    
 
-black_background="#1A1A1A"
-text_colors="#F0F0F0"
-second_fond="#242424"
-accent_blue = "#2979FF"
-button_color_text="#888888"
-window=Tk()
-icone_barre=PhotoImage(file="../assets/icones/monitoring.png").subsample(10)#sary
+
 window.title("LinuxBURNER")
 window.geometry("1280x800")
 window.minsize(900,600)
