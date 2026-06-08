@@ -32,7 +32,7 @@ def afficher_ram():
         widget.destroy()
     #centre
     cards_frame = Frame(main_frame, bg=black_background)
-    cards_frame.place(relx=0.5, rely=0.2, anchor=CENTER)
+    cards_frame.pack(pady=30)
 
     #sous blocs de ram 
     card_totale=Frame(cards_frame,background=second_fond)
@@ -56,7 +56,7 @@ def afficher_ram():
     ax.set_facecolor(second_fond)
     ax.set_title("Utilisation de la RAM", color=text_colors)
     ax.set_xlabel("Temps (secondes)", color=text_colors)
-    ax.set_ylabel("Go", color=text_colors)
+    ax.set_ylabel("Go", color=text_colors,rotation=0)
     #la courbe
     ligne, = ax.plot([],[], 'g-', linewidth=2)
     ax_graphique = ax
