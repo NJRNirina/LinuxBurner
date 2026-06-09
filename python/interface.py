@@ -2,10 +2,13 @@ from tkinter import *
 import matplotlib #fanaovana graphique
 matplotlib.use("TkAgg") #manala fenetre ephemre
 import matplotlib.pyplot as plt
+plt.ioff()
 import matplotlib.animation as animation
 from ram import get_ram
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 
+
+after_id = None
 running=False  # pour annuler la boucle d'affichage
 black_background="#1A1A1A"
 text_colors="#F0F0F0"
@@ -18,16 +21,21 @@ icone_barre=PhotoImage(file="../assets/icones/monitoring.png").subsample(10)#sar
 ax_graphique = None
 canvas_graphique=None
 ligne_graphique=None
+fig_ram = plt.figure(figsize=(8,3), dpi=100, facecolor=black_background)
+
 def afficher_ram():
     global label_ram_totale, label_ram_disponible, label_ram_utilisee, label_ram_cache, label_ram_swap
     global ax_graphique, ligne_graphique, canvas_graphique
     global main_frame
-    global running
+    global running,after_id
     running=False
-    plt.close('all')
+    if after_id is not None:
+        window.after_cancel(after_id)
+        after_id = None
     if hasattr(update_ram, "historique"):
         del update_ram.historique
         del update_ram.temps
+        del update_ram.compteur 
     for widget in main_frame.winfo_children():#supprime les frames
         widget.destroy()
     #centre
@@ -49,10 +57,10 @@ def afficher_ram():
     #frame pour le graphique
     frame_graphique=Frame(main_frame,bg=black_background)
     frame_graphique.pack(side=BOTTOM, fill=BOTH, expand=True, pady=20)
-    fig=plt.figure(figsize=(8,3),dpi=100,facecolor=black_background)
-    canvas_graphique = FigureCanvasTkAgg(fig, master=frame_graphique)
+    fig_ram.clear()
+    canvas_graphique = FigureCanvasTkAgg(fig_ram, master=frame_graphique)
     canvas_graphique.get_tk_widget().pack(fill=BOTH, expand=True)
-    ax=fig.add_subplot(1,1,1)
+    ax=fig_ram.add_subplot(1,1,1)
     ax.set_facecolor(second_fond)
     ax.set_title("Utilisation de la RAM", color=text_colors)
     ax.set_xlabel("Temps (secondes)", color=text_colors)
@@ -87,7 +95,7 @@ def afficher_ram():
     update_ram()
 
 def update_ram ():
-    global running
+    global running,after_id
     if not running:
         return
     global ax_graphique, ligne_graphique, canvas_graphique
@@ -109,17 +117,33 @@ def update_ram ():
         update_ram.historique = []  # Liste pour stocker les valeurs
         update_ram.temps = []       # Liste pour stocker les temps
     update_ram.historique.append(ram_utilisee)
-    update_ram.temps.append(len(update_ram.temps))
+    update_ram.compteur = getattr(update_ram, "compteur", 0) + 1
+    update_ram.temps.append(update_ram.compteur)
     if len(update_ram.historique) > 60:
         update_ram.historique.pop(0)
         update_ram.temps.pop(0)
     ligne_graphique.set_data(update_ram.temps, update_ram.historique) #met à jour la courbe
     #limite du graphique
-    ax_graphique.set_xlim(0, max(60, len(update_ram.temps)))
-    ax_graphique.set_ylim(0, max(update_ram.historique) + 1 if update_ram.historique else 10)
+    if update_ram.compteur <= 60:
+        ax_graphique.set_xlim(0, 60)
+    else:
+        ax_graphique.set_xlim(update_ram.compteur - 60, update_ram.compteur)
+    ax_graphique.set_ylim(0, totale_ram)
     canvas_graphique.draw_idle()#rafraichit l'affichage
-    window.after(1000, update_ram)    
+    after_id=window.after(1000, update_ram)    
 
+def fermeture():
+    global running, after_id
+    running = False
+    if after_id is not None:
+        try:
+            window.after_cancel(after_id)
+        except:
+            pass
+    plt.close('all')      # ferme toutes les figures matplotlib
+    window.quit()
+    window.destroy()
+    window.protocol("WM_DELETE_WINDOW", fermeture)
 
 window.title("LinuxBURNER")
 window.geometry("1280x800")
