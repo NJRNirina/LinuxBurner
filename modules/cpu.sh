@@ -24,7 +24,7 @@ do
        			 cpu_heat[$i]=$((temp_brute / 1000))
     		else
      			   cpu_heat[$i]="0"
-    		fi
+    	fi
 done
 # Affichage final sur une seule ligne
 printf "%s|%s|%s %%|" "$Model" "$core" "$cpu_usage"
