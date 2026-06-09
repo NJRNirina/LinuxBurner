@@ -8,5 +8,5 @@ def get_cpu():
     Core=div[1]
     Usage=div[2]
     Heat=div[3:-1]
-    processus=div[-1]
-    return Model,Core,Usage,Heat,processus
+    proces=div[-1]
+    return Model,Core,Usage,Heat,proces
