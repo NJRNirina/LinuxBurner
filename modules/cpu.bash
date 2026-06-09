@@ -3,27 +3,39 @@
 declare -a cpu_heat
  
 	#recherche des informations sur le modele du cpu sur /proc/cpuinfo
-		Model=$(awk '/model name/{print $k}'  /proc/cpuinfo|cut -d ":" -f2 |head -1)
+		Model=$(awk '/model name/{print $0}'  /proc/cpuinfo|cut -d ":" -f2 |head -1)
 		
 	##nombre de coeur du cpu sur le fichier /proc/cpuinfo
 	
-		core=$(awk '/siblings/{print $3}' /proc/cpuinfo |head -1)	
-
-	#traitement de donnee sur ps
+		core=$(awk '/cores/{print $4}' /proc/cpuinfo |head -1)	
 	#affichage des cpu utilisee par commandes en temps reel (3 grandes commandes)
-		cpu_usage_per_cmd=$(ps -eo pcpu,comm --sort=-pcpu | awk '$1 >= 1 && $1 < 100' |head -3) 
+		cpu_usage_per_cmd=$(ps -eo pcpu,comm --sort=-pcpu | awk '$1 >= 1 && $1 < 100' |head -3|awk '{print $2"("$1"%)"}' | tr '\n' ',' | sed 's/,$//') 
 		cpu_usage=$(top -bn2 -d 0.5|grep "Cpu(s)"|tail -1|awk '{print $2}')
 		cpu_usage=${cpu_usage%.* } #suppression decimale
-	#utilisation de lm -sensors pour la temperature du cpu en 6cores seulement
-		line=$(lscpu | grep "^CPU(s):" | awk '{print $2}')
+#utilisation des informations sur /sys/class/thermal/)
+zones=(/sys/class/thermal/thermal_zone*)
+line=${#zones[@]}
+for ((i=0; i<line; i++))
+do
+    # On vérifie si c'est bien une zone CPU (souvent de type x86_pkg_temp ou coretemp)
+		if [ -f "/sys/class/thermal/thermal_zone$i/temp" ]; then
+        		temp_brute=$(cat /sys/class/thermal/thermal_zone$i/temp)
+       			 # division par 1000 car on a un temperature en millidegre C
+       			 cpu_heat[$i]=$((temp_brute / 1000))
+    		else
+     			   cpu_heat[$i]="0"
+    		fi
+done
+# Affichage final sur une seule ligne
+printf "%s|%s|%s %%|" "$Model" "$core" "$cpu_usage"
 
-		#line=$(sensors | grep -E "(Core)"|wc -l)
-		for((i=1;i<=line;i++))
-	        	do
-        	        	cpu_heat[$i]=$(sensors | grep -E "(Core)"|head -$i|tail -1|awk -F " " '{print $3}' )    
-        		done
-	
+for ((i=0; i<line; i++))
+do
+    if [ "${cpu_heat[$i]}" -gt 0 ]; then
+        printf "%s°C|" "${cpu_heat[$i]}"
+    fi
+done	
 
-		echo "$Model|$core|$cpu_usage %|${cpu_heat[1]}|${cpu_heat[2]}|${cpu_heat[3]}|${cpu_heat[4]}|${cpu_heat[5]}|${cpu_heat[6]}|$cpu_usage_per_cmd"
+	echo  "$cpu_usage_per_cmd"
 
 
