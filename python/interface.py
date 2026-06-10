@@ -5,6 +5,7 @@ import matplotlib.pyplot as plt
 plt.ioff()
 import matplotlib.animation as animation
 from ram import get_ram
+from cpu import get_cpu
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 
 
@@ -144,6 +145,22 @@ def fermeture():
     window.quit()
     window.destroy()
     window.protocol("WM_DELETE_WINDOW", fermeture)
+    
+def afficher_cpu():
+    global label_Model,label_Core,Label_Usage,label_Heat,label_proces
+    global main_frame
+    global running,after_id
+    running=False
+    if after_id is not None:
+        window.after_cancel(after_id)
+        after_id = None
+    if hasattr(update_cpu,"historique"):
+        del update_cpu.historique
+        del update_cpu.temps
+        del update_cpu.compteur
+    for widget in main_frame_winfo_children():
+        widget.destroy()
+
 
 window.title("LinuxBURNER")
 window.geometry("1280x800")
