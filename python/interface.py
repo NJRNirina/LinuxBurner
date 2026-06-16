@@ -160,7 +160,6 @@ def fermeture():
     window.quit()
     window.destroy()
     window.protocol("WM_DELETE_WINDOW", fermeture)
-<<<<<<< HEAD
     
 def afficher_cpu():
     global label_Model,label_Core,Label_Usage,label_Heat,label_proces
@@ -176,8 +175,7 @@ def afficher_cpu():
         del update_cpu.compteur
     for widget in main_frame_winfo_children():
         widget.destroy()
-
-=======
+        
     ax_graphique_cpu = None
 canvas_graphique_cpu = None
 ligne_graphique_cpu = None
@@ -360,7 +358,6 @@ def update_cpu():
         
     # Planification du prochain rafraîchissement dans 1 seconde
     after_id = window.after(1000, update_cpu)
->>>>>>> cpu
 
 window.title("LinuxBURNER")
 window.geometry("1280x800")
