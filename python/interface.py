@@ -161,6 +161,27 @@ def fermeture():
     window.destroy()
     window.protocol("WM_DELETE_WINDOW", fermeture)
 
+def afficher_cpu():
+    global label_Model,label_Core,Label_Usage,label_Heat,label_proces
+    global main_frame
+    global running,after_id
+    running=False
+    if after_id is not None:
+        window.after_cancel(after_id)
+        after_id = None
+    if hasattr(update_cpu,"historique"):
+        del update_cpu.historique
+        del update_cpu.temps
+        del update_cpu.compteur
+    for widget in main_frame_winfo_children():
+        widget.destroy()
+        
+    ax_graphique_cpu = None
+canvas_graphique_cpu = None
+ligne_graphique_cpu = None
+fig_cpu = plt.figure(figsize=(8,3), dpi=100, facecolor=black_background)
+
+
 # Variables globales pour le graphique du CPU
 ax_graphique_cpu = None
 canvas_graphique_cpu = None
