@@ -4,7 +4,7 @@
 
 #trouver le fichier texte
 
-       #  remplace $fichier par ton nom de fichier
+i       #  remplace $fichier par ton nom de fichier
 # Si tu veux un chemin fixe : FICHIER="/home/rene/rapport.txt"
 
 SEUIL_DISQUE=80                       #  seuil d'alerte disque en %
@@ -91,34 +91,6 @@ if [[ -n "$partitionnement" ]]; then
 else
   echo " Aucune partition loop détectée."
 fi
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-# ── 6. RAM libre ──
-echo ""
-
-
-
-
 
 
 
