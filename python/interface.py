@@ -5,7 +5,9 @@ import matplotlib.pyplot as plt
 plt.ioff()
 import matplotlib.animation as animation
 from ram import get_ram
+from cpu import get_cpu
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
+from cpu import get_cpu
 
 
 after_id = None
@@ -32,10 +34,17 @@ def afficher_ram():
     if after_id is not None:
         window.after_cancel(after_id)
         after_id = None
+        try:
+            window.after_cancel(after_id)
+        except:
+            pass
+        after_id = None
+        
+    canvas_graphique_cpu = None # Coupe le lien avec le dessin CPU
     if hasattr(update_ram, "historique"):
         del update_ram.historique
         del update_ram.temps
-        del update_ram.compteur 
+        del update_ram.compteur
     for widget in main_frame.winfo_children():#supprime les frames
         widget.destroy()
     #centre
@@ -124,13 +133,20 @@ def update_ram ():
         update_ram.temps.pop(0)
     ligne_graphique.set_data(update_ram.temps, update_ram.historique) #met à jour la courbe
     #limite du graphique
-    if update_ram.compteur <= 60:
-        ax_graphique.set_xlim(0, 60)
-    else:
-        ax_graphique.set_xlim(update_ram.compteur - 60, update_ram.compteur)
-    ax_graphique.set_ylim(0, totale_ram)
-    canvas_graphique.draw_idle()#rafraichit l'affichage
-    after_id=window.after(1000, update_ram)    
+    # Remplacez la fin de update_ram par ceci :
+    try:
+        if canvas_graphique and canvas_graphique.get_tk_widget().winfo_exists():
+            ligne_graphique.set_data(update_ram.temps, update_ram.historique)
+            if update_ram.compteur <= 60:
+                ax_graphique.set_xlim(0, 60)
+            else:
+                ax_graphique.set_xlim(update_ram.compteur - 60, update_ram.compteur)
+            ax_graphique.set_ylim(0, totale_ram)
+            canvas_graphique.draw_idle()
+    except:
+        return # Ignore si l'onglet RAM a été fermé pendant le draw
+        
+    after_id = window.after(1000, update_ram)
 
 def fermeture():
     global running, after_id
@@ -144,6 +160,205 @@ def fermeture():
     window.quit()
     window.destroy()
     window.protocol("WM_DELETE_WINDOW", fermeture)
+
+def afficher_cpu():
+    global label_Model,label_Core,Label_Usage,label_Heat,label_proces
+    global main_frame
+    global running,after_id
+    running=False
+    if after_id is not None:
+        window.after_cancel(after_id)
+        after_id = None
+    if hasattr(update_cpu,"historique"):
+        del update_cpu.historique
+        del update_cpu.temps
+        del update_cpu.compteur
+    for widget in main_frame_winfo_children():
+        widget.destroy()
+        
+    ax_graphique_cpu = None
+canvas_graphique_cpu = None
+ligne_graphique_cpu = None
+fig_cpu = plt.figure(figsize=(8,3), dpi=100, facecolor=black_background)
+
+
+# Variables globales pour le graphique du CPU
+ax_graphique_cpu = None
+canvas_graphique_cpu = None
+ligne_graphique_cpu = None
+fig_cpu = plt.figure(figsize=(8,3), dpi=100, facecolor=black_background)
+
+def afficher_cpu():
+    global label_Model, label_Core, label_Usage, label_Heat, label_proces
+    global ax_graphique_cpu, canvas_graphique_cpu
+    global main_frame
+    global running, after_id
+    
+    running = False
+    if after_id is not None:
+        window.after_cancel(after_id)
+        after_id = None
+        
+    # Nettoyage de l'historique CPU précédent si on change d'onglet
+    if hasattr(update_cpu, "historique"):
+        del update_cpu.historique
+        del update_cpu.temps
+        del update_cpu.compteur
+        
+    # Rend la zone principale vide proprement  
+    global canvas_graphique
+    canvas_graphique = None
+    for widget in main_frame.winfo_children():
+        widget.destroy()
+
+    # Conteneur pour les cases d'informations textuelles
+    cards_frame = Frame(main_frame, bg=black_background)
+    cards_frame.pack(pady=20)
+
+    # Création des sous-blocs (cards) pour le CPU
+    card_model = Frame(cards_frame, background=second_fond)
+    card_model.pack(side=LEFT, padx=8, pady=10)
+    card_core = Frame(cards_frame, bg=second_fond)
+    card_core.pack(side=LEFT, padx=8, pady=10)
+    card_usage = Frame(cards_frame, bg=second_fond)
+    card_usage.pack(side=LEFT, padx=8, pady=10)
+    card_heat = Frame(cards_frame, bg=second_fond)
+    card_heat.pack(side=LEFT, padx=8, pady=10)
+    card_proces = Frame(cards_frame, bg=second_fond)
+    card_proces.pack(side=LEFT, padx=8, pady=10)
+
+    # Titres des cases
+    Label(card_model, text="MODÈLE", bg=second_fond, fg=text_colors, font=("Helvetica", 10, "bold")).pack(anchor=W, padx=10, pady=2)
+    Label(card_core, text="CŒURS", bg=second_fond, fg=text_colors, font=("Helvetica", 10, "bold")).pack(anchor=W, padx=10, pady=2)
+    Label(card_usage, text="UTILISATION", bg=second_fond, fg=text_colors, font=("Helvetica", 10, "bold")).pack(anchor=W, padx=10, pady=2)
+    Label(card_heat, text="TEMPÉRATURES", bg=second_fond, fg=text_colors, font=("Helvetica", 10, "bold")).pack(anchor=W, padx=10, pady=2)
+    Label(card_proces, text="TOP PROCESSUS", bg=second_fond, fg=text_colors, font=("Helvetica", 10, "bold")).pack(anchor=W, padx=10, pady=2)
+
+    # Labels dynamiques qui recevront les données de cpu.py
+    label_Model = Label(card_model, bg=second_fond, fg=text_colors, font=("Fixedsys", 12), wraplength=200)
+    label_Model.pack(anchor=W, padx=10, pady=10)
+    label_Core = Label(card_core, bg=second_fond, fg=text_colors, font=("Fixedsys", 14))
+    label_Core.pack(padx=10, pady=10)
+    label_Usage = Label(card_usage, bg=second_fond, fg=text_colors, font=("Fixedsys", 14))
+    label_Usage.pack(padx=10, pady=10)
+    label_Heat = Label(card_heat, bg=second_fond, fg=text_colors, font=("Fixedsys", 12))
+    label_Heat.pack(padx=10, pady=10)
+    label_proces = Label(card_proces, bg=second_fond, fg=text_colors, font=("Fixedsys", 11), justify=LEFT)
+    label_proces.pack(padx=10, pady=10)
+
+    # Zone du graphique en bas
+    frame_graphique_cpu = Frame(main_frame, bg=black_background)
+    frame_graphique_cpu.pack(side=BOTTOM, fill=BOTH, expand=True, pady=10)
+    
+    fig_cpu.clear()
+    canvas_graphique_cpu = FigureCanvasTkAgg(fig_cpu, master=frame_graphique_cpu)
+    canvas_graphique_cpu.get_tk_widget().pack(fill=BOTH, expand=True)
+    
+    ax = fig_cpu.add_subplot(1, 1, 1)
+    ax.set_facecolor(second_fond)
+    ax.set_title("Utilisation Globale du CPU (%)", color=text_colors)
+    ax.set_xlabel("Temps (secondes)", color=text_colors)
+    ax.set_ylabel("%", color=text_colors, rotation=0)
+    
+    ax_graphique_cpu = ax
+    running = True
+    update_cpu()
+
+def update_cpu():
+    global running, after_id
+    
+    # Si l'onglet n'est plus actif, on coupe proprement l'horloge
+    if not running:
+        if after_id is not None:
+            try:
+                window.after_cancel(after_id)
+            except:
+                pass
+            after_id = None
+        return
+        
+    # Si la fenêtre principale a été fermée, on arrête tout
+    try:
+        if not window.winfo_exists():
+            return
+    except:
+        return
+        
+    global ax_graphique_cpu, canvas_graphique_cpu
+    global label_Model, label_Core, label_Usage, label_Heat, label_proces
+    
+    try:
+        # Récupération des données depuis cpu.py
+        model, core, usage, heat, proces = get_cpu()
+        
+        #conversion en float
+        usage_clean = usage.replace("%", "").replace(",", ".").strip()
+        usage_numeric = float(usage_clean) if usage_clean else 0.0
+        
+       # Donnees sur les temperatures 
+        liste_temps_formatees = []
+        compteur_coeur = 1
+        
+        for temp in heat:
+            temp_clean = temp.strip()
+            if temp_clean and temp_clean != "0" and temp_clean != "0°C":
+                if "°C" not in temp_clean:
+                    temp_clean += "°C"
+                liste_temps_formatees.append(f"Cœur {compteur_coeur}: {temp_clean}")
+                compteur_coeur += 1
+        
+        heat_str = "\n".join(liste_temps_formatees) if liste_temps_formatees else "N/A"
+        
+        # Mise à jour des boîtes d'affichage de l'interface
+        label_Model.config(text=model.strip())
+        label_Core.config(text=f"{core.strip()} Coeurs")
+        label_Usage.config(text=f"{usage_numeric}%")
+        label_Heat.config(text=heat_str)
+        label_proces.config(text=proces.strip() if proces.strip() else "Aucun (>1%)")
+        
+        # Gestion de l'historique glissant du graphique (60 secondes)
+        if not hasattr(update_cpu, "historique"):
+            update_cpu.historique = []
+            update_cpu.temps = []
+            
+        update_cpu.historique.append(usage_numeric)
+        update_cpu.compteur = getattr(update_cpu, "compteur", 0) + 1
+        update_cpu.temps.append(update_cpu.compteur)
+        
+        if len(update_cpu.historique) > 60:
+            update_cpu.historique.pop(0)
+            update_cpu.temps.pop(0)
+            
+        #Creation des affichages graphiques
+        try:
+            if canvas_graphique_cpu and canvas_graphique_cpu.get_tk_widget().winfo_exists():
+                # On efface les barres de la seconde précédente
+                ax_graphique_cpu.containers.clear()
+                
+                # On dessine les nouveaux rectangles
+                ax_graphique_cpu.bar(
+                    update_cpu.temps, 
+                    update_cpu.historique, 
+                    color=accent_blue, 
+                    width=0.6
+                )
+                
+                # Effet de défilement de l'axe X
+                if update_cpu.compteur <= 60:
+                    ax_graphique_cpu.set_xlim(0, 61)
+                else:
+                    ax_graphique_cpu.set_xlim(update_cpu.compteur - 60, update_cpu.compteur + 1)
+                    
+                ax_graphique_cpu.set_ylim(0, 100)
+                canvas_graphique_cpu.draw_idle()
+        except:
+            return
+            
+    except Exception as e:
+        print(f"Erreur d'update CPU: {e}")
+        
+    # Planification du prochain rafraîchissement dans 1 seconde
+    after_id = window.after(1000, update_cpu)
 
 window.title("LinuxBURNER")
 window.geometry("1280x800")
@@ -166,6 +381,7 @@ ram_button=Button(nav_bar,text="RAM",bg=second_fond,bd=0,fg=button_color_text,co
                   activebackground=second_fond,activeforeground=text_colors,font=("Helvetica",11),cursor="hand2")
 ram_button.pack(side=LEFT,fill=BOTH,expand=YES)
 cpu_button=Button(nav_bar,text="CPU",bg=second_fond,bd=0,fg=button_color_text,
+                  command=afficher_cpu,
                   activebackground=second_fond,activeforeground=text_colors,font=("Helvetica",11),cursor="hand2")
 cpu_button.pack(side=LEFT,fill=BOTH,expand=YES)
 disk_button=Button(nav_bar,text="DISQUE",bg=second_fond,bd=0,fg=button_color_text,
@@ -178,7 +394,31 @@ network_button.pack(side=LEFT,fill=BOTH,expand=YES)
 #zone restante
 main_frame=Frame(window,background=black_background)
 main_frame.pack(fill=BOTH,expand=True)
+def quitter_application():
+    global running, after_id
+    running = False 
+    
+    # 1. On annule la boucle infinie de rafraîchissement
+    if after_id is not None:
+        try:
+            window.after_cancel(after_id)
+        except:
+            pass
+        after_id = None
+        
+    # 2. FORCE LA FERMETURE DE MATPLOTLIB (La clé du problème !)
+    try:
+        plt.close('all') # Ferme toutes les figures (fig_ram et fig_cpu)
+    except:
+        pass
+        
+    # 3. On détruit proprement les fenêtres de l'interface
+    try:
+        window.quit()
+        window.destroy()
+    except:
+        pass
 
-
+window.protocol("WM_DELETE_WINDOW", quitter_application)
 window.mainloop()
 

@@ -1,7 +1,7 @@
 import subprocess 
 
 def get_cpu():
-    result=subprocess.check_output(["bash","../modules/cpu.bash"])
+    result=subprocess.check_output(["bash","../modules/cpu.sh"])
     data=result.decode().strip()
     div=data.split("|")
     Model=div[0]
