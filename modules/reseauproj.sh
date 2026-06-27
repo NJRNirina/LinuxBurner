@@ -1,7 +1,6 @@
 #!/bin/bash
-#exec >>(tee -a reseauproj.log) 2>&1
+
 #Etape 1:identité de la machine
-#main() {
 echo  "ETAPE 1: IDENTITÉ DE LA MACHINE"
 echo ""
 
@@ -11,16 +10,20 @@ echo "nom de la machine:$HOSTNAME"
 
 #IP local (LAN) =IP publique
 IP_LOCALE=$(hostname -I | awk '{print $1}')
-echo "IP local:$IP_LOCALE"
-
+if [ -z "$IP_LOCALE" ];then
+	IP_LOCALE="non connecte,impossible d'afficher l'ip locale."
+fi	
+echo "IP locale:$IP_LOCALE"
 #IP publique (WAN)
-IP_PUBLIQUE=$(curl -s --max-time 4 ifconfig.me)
-if [ -n "IP publique" ]; then
-	echo "IP publique (WAN):$IP_PUBLIQUE"
+if command -v curl &> /dev/null; then #-v veifie que la cmd existe
+	IP_PUBLIQUE=$(curl -s --max-time 10 ifconfig.me)
+	if [ -z "$IP_PUBLIQUE" ];then 
+		IP_PUBLIQUE="pas d'internet,impossible d'afficher l'ip publique."
+	fi	
 else
-	echo "IP publique (WAN):pas d'internet"
-       echo sudo apt install curl	
+	IP_PUBLIQUE="impossible de verifier l'IP publique:curl non installee,veuillez l'installer via sudo apt install curl."
 fi
+echo "IP publique:$IP_PUBLIQUE"
 
 #adresse MAC
 MAC=$(ip a | grep 'link/ether' | awk '{print $2}' | head -1)
@@ -28,8 +31,12 @@ echo "adresse MAC:$MAC"
 
 #inteface réseau active
 INTERFACE_ACTIVE=$(ip link show | awk -F': ' '{print $2}')
-echo "interface active:$INTERFACE_ACTIVE"
-#bol mila condition ra tsy mande
+if [ -z "$INTERFACE_ACTIVE" ];then
+	echo "interface active:aucune interface active."
+else	
+	echo "interface active:$INTERFACE_ACTIVE"
+fi	
+
 echo ""
 
 
@@ -61,9 +68,10 @@ echo ""
 
 #test connectivité vers google
 echo "Test connectivité vers google:"
-ping -c 3 8.8.8.8
+ping -c 3 8.8.8.8 >/dev/null 2>&1 #>/dev/null 2>&1 cache la sortie normale et les messages d erreurs
+PING_RESULT=$? #tsy napety anle teo an tonga d le echo no captureny f tsy le ping
 echo ""
-if [ $? -eq 0 ] ;then #$? code de retour en bash,0=succès,1=échec
+if [ $PING_RESULT -eq 0 ] ;then #$? code de retour en bash,0=succès,1=échec
 	echo "Internet accessible."
 else
 	echo "Pas d'accès à internet"	
@@ -86,8 +94,9 @@ echo ""
 #Latence moyenne (50-150ms) → connexion correcte
 #Latence élevée (> 150ms)   → connexion lente ou surchargée
 
-RESULT=$(ping -c 3 8.8.8.8) #8.8.8.8=IP de google
-if [ $? -eq 0 ] ;then
+RESULT=$(ping -c 3 8.8.8.8 2>/dev/null) #8.8.8.8=IP de google #2>/dev/null message d erreur no alef any
+PING2=$?
+if [ $PING2 -eq 0 ] ;then
 	LATENCE=$(echo "$RESULT" | tail -1 | awk -F'/' '{print $5}')
 	if [ $(echo "$LATENCE < 50") ]; then
 		echo "Connexion rapide."
@@ -129,9 +138,8 @@ echo "-Nombre de connexion en attente de fermeture:$NB_CLOSE_WAIT"
 #date '%d/%m/%Y %H:%M:%S'
 echo ""
 echo "Date:$(date +"%d/%m/%Y %H:%M:%S")"
-#echo "x" | tee -a reseauproj.log 
-#}
-#main | zenity --text-info --title "RESEAU" --width=1000 --height=1000 --auto-scroll
+
+
 
 
 

@@ -15,7 +15,7 @@ declare -a cpu_heat
 #utilisation des informations sur /sys/class/thermal/)
 zones=(/sys/class/thermal/thermal_zone*)
 line=${#zones[@]}
-for ((i=0; i<line; i++))
+for ((i=0; i<core; i++))
 do
     # On vérifie si c'est bien une zone CPU (souvent de type x86_pkg_temp ou coretemp)
 		if [ -f "/sys/class/thermal/thermal_zone$i/temp" ]; then
@@ -29,7 +29,7 @@ done
 # Affichage final sur une seule ligne
 printf "%s|%s|%s %%|" "$Model" "$core" "$cpu_usage"
 
-for ((i=0; i<line; i++))
+for ((i=0; i<core; i++))
 do
     if [ "${cpu_heat[$i]}" -gt 0 ]; then
         printf "%s°C|" "${cpu_heat[$i]}"

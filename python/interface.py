@@ -8,6 +8,9 @@ from ram import get_ram
 from cpu import get_cpu
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 from cpu import get_cpu
+from reseau import get_reseau
+import threading 
+from tkinter import scrolledtext
 
 
 after_id = None
@@ -160,7 +163,7 @@ def fermeture():
     window.quit()
     window.destroy()
     window.protocol("WM_DELETE_WINDOW", fermeture)
-    
+
 def afficher_cpu():
     global label_Model,label_Core,Label_Usage,label_Heat,label_proces
     global main_frame
@@ -180,6 +183,7 @@ def afficher_cpu():
 canvas_graphique_cpu = None
 ligne_graphique_cpu = None
 fig_cpu = plt.figure(figsize=(8,3), dpi=100, facecolor=black_background)
+
 
 # Variables globales pour le graphique du CPU
 ax_graphique_cpu = None
@@ -359,6 +363,38 @@ def update_cpu():
     # Planification du prochain rafraîchissement dans 1 seconde
     after_id = window.after(1000, update_cpu)
 
+#reseau
+def afficher_reseau():
+    global main_frame,running,after_id
+    running = False
+    if after_id is not None:
+        window.after_cancel(after_id)
+        after_id = None
+    for widget in main_frame.winfo_children():
+        widget.destroy()
+    #zone de texte scrollable
+    text_zone=scrolledtext.ScrolledText(
+            main_frame,
+            bg="#1A1A1A",
+            fg="#E0E0E0",
+            font=("Ubuntu mono",11),
+            bd=0,
+            relief=FLAT
+            )
+    text_zone.pack(fill=BOTH,expand=True,padx=20,pady=20)
+    text_zone.insert(END,"Chargement en cours ...\n")
+    text_zone.config(state=DISABLED)
+    def lancer ():
+        output=get_reseau()
+        def afficher():
+            text_zone.config(state=NORMAL)
+            text_zone.delete("1.0",END)
+            text_zone.insert(END,output)
+            text_zone.config(state=DISABLED)
+        window.after(0,afficher)
+
+    threading.Thread(target=lancer,daemon=True).start()
+
 window.title("LinuxBURNER")
 window.geometry("1280x800")
 window.minsize(900,600)
@@ -386,7 +422,7 @@ cpu_button.pack(side=LEFT,fill=BOTH,expand=YES)
 disk_button=Button(nav_bar,text="DISQUE",bg=second_fond,bd=0,fg=button_color_text,
                    activebackground=second_fond,activeforeground=text_colors,font=("Helvetica",11),cursor="hand2")
 disk_button.pack(fill=BOTH,side=LEFT,expand=YES)
-network_button=Button(nav_bar,text="RÉSEAU",bg=second_fond,bd=0,fg=button_color_text,
+network_button=Button(nav_bar,text="RÉSEAU",bg=second_fond,bd=0,fg=button_color_text,command=afficher_reseau,
                       activebackground=second_fond,activeforeground=text_colors,font=("Helvetica",11),cursor="hand2")
 network_button.pack(side=LEFT,fill=BOTH,expand=YES)
 
