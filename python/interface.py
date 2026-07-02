@@ -1,4 +1,5 @@
 from tkinter import *
+from tkinter import filedialog
 import matplotlib #fanaovana graphique
 matplotlib.use("TkAgg") #manala fenetre ephemre
 import matplotlib.pyplot as plt
@@ -6,6 +7,7 @@ plt.ioff()
 import matplotlib.animation as animation
 from ram import get_ram
 from cpu import get_cpu
+from disk import get_disk, get_file_info
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 from cpu import get_cpu
 from reseau import get_reseau
@@ -27,6 +29,10 @@ ax_graphique = None
 canvas_graphique=None
 ligne_graphique=None
 fig_ram = plt.figure(figsize=(8,3), dpi=100, facecolor=black_background)
+# Labels globaux et widgets dynamiques pour le DISQUE
+label_disk_part = label_disk_usage = label_disk_alert = None
+progress_disk = progress_file = entry_file = None
+label_file_path1 = label_file_size1 = None
 
 def afficher_ram():
     global label_ram_totale, label_ram_disponible, label_ram_utilisee, label_ram_cache, label_ram_swap
@@ -362,6 +368,161 @@ def update_cpu():
         
     # Planification du prochain rafraîchissement dans 1 seconde
     after_id = window.after(1000, update_cpu)
+# --- ONGLETS : DISQUE ---
+def afficher_disk():
+    global main_frame, running, after_id
+    global label_disk_part, label_disk_usage, label_disk_alert, progress_disk
+    global label_file_path1, label_file_size1, progress_file, entry_file
+
+    # 1. On arrête proprement les boucles des autres onglets
+    running = False
+    if after_id is not None:
+        try:
+            window.after_cancel(after_id)
+        except:
+            pass
+        after_id = None
+
+    # 2. Nettoyage complet de la zone d'affichage principale
+    for widget in main_frame.winfo_children():
+        widget.destroy()
+
+    # 3. Création des cadres visuels
+    cards_frame = Frame(main_frame, bg=black_background)
+    cards_frame.pack(pady=10)
+
+    card_part  = Frame(cards_frame, bg=second_fond)
+    card_part.pack(side=LEFT, padx=8, pady=5)
+    card_usage = Frame(cards_frame, bg=second_fond)
+    card_usage.pack(side=LEFT, padx=8, pady=5)
+    card_alert = Frame(cards_frame, bg=second_fond)
+    card_alert.pack(side=LEFT, padx=8, pady=5)
+
+    Label(card_part,  text="PARTITIONS",  bg=second_fond, fg=text_colors, font=("Helvetica", 10, "bold")).pack(anchor=W, padx=10, pady=2)
+    Label(card_usage, text="UTILISATION", bg=second_fond, fg=text_colors, font=("Helvetica", 10, "bold")).pack(anchor=W, padx=10, pady=2)
+    Label(card_alert, text="STATUT",      bg=second_fond, fg=text_colors, font=("Helvetica", 10, "bold")).pack(anchor=W, padx=10, pady=2)
+
+    label_disk_part  = Label(card_part,  text="Chargement...", bg=second_fond, fg=text_colors, font=("Fixedsys", 11), justify=LEFT)
+    label_disk_part.pack(padx=10, pady=10)
+    label_disk_usage = Label(card_usage, text="-- %", bg=second_fond, fg=text_colors, font=("Fixedsys", 14))
+    label_disk_usage.pack(padx=10, pady=10)
+    label_disk_alert = Label(card_alert, text="ANALYSE", bg=second_fond, fg=text_colors, font=("Helvetica", 12))
+    label_disk_alert.pack(padx=10, pady=10)
+
+    # 4. Barre d'utilisation globale (Style ttk)
+    card_barres = Frame(main_frame, bg=second_fond)
+    card_barres.pack(fill=X, padx=40, pady=10)
+    
+    from tkinter import ttk
+    style = ttk.Style()
+    style.theme_use('default')
+    style.configure("Disk.Horizontal.TProgressbar", thickness=18, troughcolor=black_background, background=accent_blue, borderwidth=0)
+    style.configure("File.Horizontal.TProgressbar", thickness=14, troughcolor=black_background, background="#55FF55", borderwidth=0)
+    
+    Label(card_barres, text=" Utilisation Globale du Disque (/) :", bg=second_fond, fg=text_colors, font=("Helvetica", 10, "bold")).pack(anchor=W, padx=20, pady=(10, 2))
+    progress_disk = ttk.Progressbar(card_barres, style="Disk.Horizontal.TProgressbar", orient="horizontal", mode="determinate")
+    progress_disk.pack(fill=X, expand=True, padx=20, pady=(0, 15))
+
+    # 5. Zone Fichier cible
+    card_fichier = Frame(main_frame, bg=second_fond)
+    card_fichier.pack(fill=BOTH, expand=True, padx=40, pady=10)
+
+    Label(card_fichier, text="SURVEILLANCE D'UN FICHIER CIBLE", bg=second_fond, fg=accent_blue, font=("Helvetica", 12, "bold")).pack(pady=10)
+
+    def parcourir_fichier():
+        filename = filedialog.askopenfilename(parent=window, title="Choisir un fichier à surveiller")
+        if filename:
+            entry_file.delete(0, END)
+            entry_file.insert(0, filename)
+
+    btn_parcourir = Button(card_fichier, text="Parcourir...", bg=accent_blue, fg=text_colors, bd=0, relief=FLAT,
+                           font=("Helvetica", 11, "bold"), command=parcourir_fichier, cursor="hand2", width=30)
+    btn_parcourir.pack(pady=5)
+
+    entry_file = Entry(card_fichier, bg=black_background, fg=text_colors, bd=1, relief=SOLID, 
+                       highlightthickness=0, insertbackground="white", font=("Helvetica", 11), justify=CENTER, width=30)
+    # On l'insère de manière invisible ou discrète pour stocker le chemin
+    entry_file.pack(pady=5)
+
+    result_frame = Frame(card_fichier, bg=second_fond)
+    result_frame.pack(fill=X, padx=40, pady=10)
+
+    Label(result_frame, text="Chemin Absolu :", bg=second_fond, fg=button_color_text, font=("Helvetica", 10)).grid(row=0, column=0, sticky=W, pady=2)
+    label_file_path1 = Label(result_frame, text="Aucun fichier sélectionné", bg=second_fond, fg=text_colors, font=("Fixedsys", 10))
+    label_file_path1.grid(row=0, column=1, sticky=W, padx=10, pady=2)
+
+    Label(result_frame, text="Taille Annotée :", bg=second_fond, fg=button_color_text, font=("Helvetica", 10)).grid(row=1, column=0, sticky=W, pady=2)
+    label_file_size1 = Label(result_frame, text="0 Ko", bg=second_fond, fg="#55FF55", font=("Fixedsys", 10, "bold"))
+    label_file_size1.grid(row=1, column=1, sticky=W, padx=10, pady=2)
+
+    Label(result_frame, text="Poids Visuel :", bg=second_fond, fg=button_color_text, font=("Helvetica", 10)).grid(row=2, column=0, sticky=W, pady=5)
+    progress_file = ttk.Progressbar(result_frame, style="File.Horizontal.TProgressbar", orient="horizontal", mode="determinate", length=400)
+    progress_file.grid(row=2, column=1, sticky=W, padx=10, pady=5)
+
+    # 6. On active la boucle de rafraîchissement
+    running = True
+    update_disk()
+
+
+def update_disk():
+    global running, after_id, label_disk_part, label_disk_usage, label_disk_alert, progress_disk
+    global label_file_path1, label_file_size1, progress_file, entry_file
+    
+    if not running:
+        return
+        
+    try:
+        from disk import get_disk, get_file_info
+        partitions, usage, pourcent, alerte = get_disk()
+        
+        # Nettoyage et conversion sécurisée du pourcentage en float/int
+        if isinstance(pourcent, str):
+            pourcent = int(pourcent.replace("%", "").strip())
+
+        # Mise à jour des composants s'ils existent encore
+        if label_disk_part and label_disk_part.winfo_exists():
+            label_disk_part.config(text=partitions if partitions else "N/A")
+        if label_disk_usage and label_disk_usage.winfo_exists():
+            label_disk_usage.config(text=f"{pourcent}% ({usage})")
+        if progress_disk and progress_disk.winfo_exists():
+            progress_disk['value'] = pourcent
+        
+        if label_disk_alert and label_disk_alert.winfo_exists():
+            if alerte:
+                label_disk_alert.config(text=" DISQUE PLEIN", fg="#FF5555")
+            else:
+                label_disk_alert.config(text=" OK",           fg="#55FF55")
+            
+        # Surveillance du fichier sélectionné
+        if entry_file and entry_file.winfo_exists():
+            chemin = entry_file.get().strip()
+            if chemin:
+                import os
+                try:
+                    chemin_abs, taille_str, _ = get_file_info(chemin)
+                except:
+                    chemin_abs, taille_str = chemin, "Erreur lecture"
+
+                if label_file_path1 and label_file_path1.winfo_exists():
+                    label_file_path1.config(text=chemin_abs)
+                if label_file_size1 and label_file_size1.winfo_exists():
+                    label_file_size1.config(text=taille_str)
+                
+                try:
+                    taille_octets = os.path.getsize(chemin)
+                    taille_mo = taille_octets / (1024 * 1024)
+                    pourcentage_fichier = min((taille_mo / 100.0) * 100, 100) # Max 100%
+                    if progress_file and progress_file.winfo_exists():
+                        progress_file['value'] = pourcentage_fichier
+                except:
+                    if progress_file and progress_file.winfo_exists():
+                        progress_file['value'] = 0
+                        
+    except Exception as e:
+        print(f"Erreur update_disk : {e}")
+
+    # Relancer toutes les 1 seconde (1000ms)
+    after_id = window.after(1000, update_disk)
 
 #reseau
 def afficher_reseau():
@@ -419,7 +580,7 @@ cpu_button=Button(nav_bar,text="CPU",bg=second_fond,bd=0,fg=button_color_text,
                   command=afficher_cpu,
                   activebackground=second_fond,activeforeground=text_colors,font=("Helvetica",11),cursor="hand2")
 cpu_button.pack(side=LEFT,fill=BOTH,expand=YES)
-disk_button=Button(nav_bar,text="DISQUE",bg=second_fond,bd=0,fg=button_color_text,
+disk_button=Button(nav_bar,text="DISQUE",bg=second_fond,bd=0,fg=button_color_text,command=afficher_disk,
                    activebackground=second_fond,activeforeground=text_colors,font=("Helvetica",11),cursor="hand2")
 disk_button.pack(fill=BOTH,side=LEFT,expand=YES)
 network_button=Button(nav_bar,text="RÉSEAU",bg=second_fond,bd=0,fg=button_color_text,command=afficher_reseau,
