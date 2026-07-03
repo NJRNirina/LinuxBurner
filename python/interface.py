@@ -1,5 +1,6 @@
 from tkinter import *
 from tkinter import filedialog
+import re
 import matplotlib #fanaovana graphique
 matplotlib.use("TkAgg") #manala fenetre ephemre
 import matplotlib.pyplot as plt
@@ -525,36 +526,103 @@ def update_disk():
     after_id = window.after(1000, update_disk)
 
 #reseau
-def afficher_reseau():
-    global main_frame,running,after_id
-    running = False
-    if after_id is not None:
-        window.after_cancel(after_id)
-        after_id = None
-    for widget in main_frame.winfo_children():
-        widget.destroy()
-    #zone de texte scrollable
-    text_zone=scrolledtext.ScrolledText(
-            main_frame,
-            bg="#1A1A1A",
-            fg="#E0E0E0",
-            font=("Ubuntu mono",11),
-            bd=0,
-            relief=FLAT
-            )
-    text_zone.pack(fill=BOTH,expand=True,padx=20,pady=20)
-    text_zone.insert(END,"Chargement en cours ...\n")
-    text_zone.config(state=DISABLED)
+import re
+
+ANSI_VERS_COULEUR = {
+    "0;31": "#FF5C5C", "0;32": "#4CD964", "1;33": "#FFD34D",
+    "0;33": "#FFD34D", "0;34": "#4FA3FF", "0;35": "#D66FFF",
+    "0;36": "#4DE8E8", "0;37": "#F0F0F0",
+    "0;91": "#FF5C5C", "0;92": "#4CD964", "0;93": "#FFD34D",
+    "0;94": "#4FA3FF", "0;95": "#D66FFF", "0;96": "#4DE8E8",
+    "1;31": "#FF5C5C", "1;32": "#4CD964", "1;36": "#4DE8E8",
+    "0": None,
+}
+
+def inserer_texte_colore(widget, texte):
+    """Parse les codes ANSI de `texte` et insère avec les bons tags Tkinter."""
+    pattern = re.compile(r'\033\[([0-9;]*)m')
+    position = 0
+    tag_courant = "normal"
+
+    for match in pattern.finditer(texte):
+        morceau = texte[position:match.start()]
+        if morceau:
+            widget.insert(END, morceau, tag_courant)
+
+        code = match.group(1)
+        gras = code.startswith("1")
+        couleur = ANSI_VERS_COULEUR.get(code)
+
+        if couleur is None:
+            tag_courant = "normal"
+        else:
+            nom_tag = f"ansi_{code.replace(';', '_')}"
+            if nom_tag not in widget.tag_names():
+                widget.tag_configure(
+                    nom_tag,
+                    foreground=couleur,
+                    font=("Ubuntu Mono", 11, "bold" if gras else "normal")
+                )
+            tag_courant = nom_tag
+
+        position = match.end()
+
+    if position < len(texte):
+        widget.insert(END, texte[position:], tag_courant)
+
+def actualiser_reseau():
+    global text_zone_reseau,bouton_actualiser_reseau
+    #1 clic miandry anle donnees voray leizy vo afaka miclic ndray,pour eviter les clics multiples pendant l analyse
+    bouton_actualiser_reseau.config(state=DISABLED,text="Actualisaton")
+    text_zone_reseau.config(state=NORMAL)
+    text_zone_reseau.delete("1.0",END)
+    text_zone_reseau.insert(END,"Analyse en cours ...\n")
+    text_zone_reseau.config(state=DISABLED)
+
     def lancer ():
         output=get_reseau()
         def afficher():
-            text_zone.config(state=NORMAL)
-            text_zone.delete("1.0",END)
-            text_zone.insert(END,output)
-            text_zone.config(state=DISABLED)
+            text_zone_reseau.config(state=NORMAL)
+            text_zone_reseau.delete("1.0",END)
+            text_zone_reseau.tag_configure("normal",font=("Ubuntu Mono",11))
+            inserer_texte_colore(text_zone_reseau,output)
+            #text_zone_reseau.insert(END,output)
+            text_zone_reseau.config(state=DISABLED)
+            bouton_actualiser_reseau.config(state=NORMAL,text="Actualiser")
         window.after(0,afficher)
 
     threading.Thread(target=lancer,daemon=True).start()
+
+def afficher_reseau():
+    global main_frame,running,after_id
+    global text_zone_reseau,bouton_actualiser_reseau
+    running=False
+    if after_id is not None:
+        window.after_cancel(after_id)
+        after_id=None
+    for widget in main_frame.winfo_children():
+        widget.destroy()
+
+    barre_reseau=Frame(main_frame,bg=black_background)
+    barre_reseau.pack(fill=X,padx=20,pady=(20,0))
+
+    bouton_actualiser_reseau=Button(
+            barre_reseau,text="Actualiser",
+            bg=second_fond,fg=text_colors,bd=0,
+            activebackground=accent_blue,activeforeground=text_colors,
+            font=("Helvetica",10),cursor="hand2",
+            command=actualiser_reseau
+            )
+    bouton_actualiser_reseau.pack(side=BOTTOM)
+
+    #zone de texte scrollable
+    text_zone_reseau=scrolledtext.ScrolledText(
+            main_frame,bg="#1A1A1A",fg="#E0E0E0",
+            font=("Ubuntu mono",11),bd=0,
+            relief=FLAT
+            )
+    text_zone_reseau.pack(fill=BOTH,expand=True,padx=20,pady=20)
+    actualiser_reseau()
 
 window.title("LinuxBURNER")
 window.geometry("1280x800")
