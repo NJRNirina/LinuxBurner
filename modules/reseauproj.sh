@@ -73,7 +73,6 @@ echo -e "${BLEU_VIF}•Octets envoyés (en Mo):${RESET} $RX_MO"
 echo -e "${BLEU_VIF}•Octets reçus (en Mo):${RESET} $TX_MO"
 done
 echo ""
-#bol afaka apina vitesse en temps reel
 
 #Etape 3:test connectivité
 echo -e "\t${CYAN_VIF}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${RESET}"
@@ -107,11 +106,11 @@ echo ""
 
 #test latence vers google
 #latence(temps de réponse): temps que met un paquet pour aller et revenir d'une machine
-#Faible latence (< 50ms)  → connexion rapide
-#Latence moyenne (50-150ms) → connexion correcte
-#Latence élevée (> 150ms)   → connexion lente ou surchargée
+#Faible latence (< 50ms)=connexion rapide
+#Latence moyenne (50-150ms)=connexion correcte
+#Latence élevée (> 150ms)=connexion lente ou surchargée
 
-RESULT=$(ping -c 3 8.8.8.8 2>/dev/null) #8.8.8.8=IP de google #2>/dev/null message d erreur no alef any
+RESULT=$(ping -c 3 8.8.8.8 2>/dev/null) #8.8.8.8=IP de google
 PING2=$?
 if [ $PING2 -eq 0 ] ;then
 	LATENCE=$(echo "$RESULT" | tail -1 | awk -F'/' '{print $5}')
@@ -151,11 +150,8 @@ NB_CLOSE_WAIT=$(ss -tn | grep -c 'CLOSE-WAIT')
 echo -e "\t${BLEU_VIF}-Nombre de connexion active en cours:${RESET}${JAUNE_VIF}$NB_ESTABLISHED${RESET}"
 echo -e "\t${BLEU_VIF}-Nombre de connexion en fermeture:${RESET}${JAUNE_VIF}$NB_TIME_WAIT${RESET}"
 echo -e "\t${BLEU_VIF}-Nombre de connexion en attente de fermeture:${RESET}${JAUNE_VIF}$NB_CLOSE_WAIT${RESET}"
-
-#commande (exemple:echo "texte") | tee -a fichier.log : affiche dans le terminalet sauvegarde en meme temps
-#fichier.log pour afficher en même dans le terminal et dans le fichier
-#date '%d/%m/%Y %H:%M:%S'
 echo ""
+
 echo -e "\t${CYAN_VIF}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${RESET}"
 echo -e "\t${CYAN_VIF}Rapport du: Date:$(date +"%d/%m/%Y %H:%M:%S")${RESET}"
 echo -e "\t${CYAN_VIF}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${RESET}"
