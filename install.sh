@@ -44,39 +44,40 @@ then
 		if [[ ${Test1} -ne 0 ]];then
 			sudo apt update && sudo apt install  python3-tk
 			echo -e "${Green}Tkinter installed${Reset}"
-		        echo -e "Installation [status]:${Green}installed${Reset}"
-                else
-                        echo -e "Installation [status]:${Red}failed${Reset}"
-                        echo -e "${Green}Tkinter is already installed${Reset} "
-                fi
+		    echo -e "Installation [status]:${Green}installed${Reset}"
+        else
+                echo -e "Installation [status]:${Red}failed${Reset}"
+                echo -e "${Green}Tkinter is already installed${Reset} "
+        fi
 
 		#Installing  matplotlib (for graph)
-                python3 -c "import matplotlib" &>/dev/null
-                Test2=$?
-        	echo -e "${Cyan}installation de matplotlib...${Reset}"
-                if [[ ${Test2} -ne 0 ]];
-                then
-                        sudo apt install python3-matplotlib
-                        echo -e "Installation [status]:${Green}installed${Reset}"
-                else
-                        echo -e "Installation [status]:${Red}failed${Reset}"
-                        echo -e "${Green}matplotlib is already installed${Reset} "
-                fi
+        python3 -c "import matplotlib" &>/dev/null
+        Test2=$?
+        echo -e "${Cyan}installation de matplotlib...${Reset}"
+        if [[ ${Test2} -ne 0 ]];
+        then
+                sudo apt install python3-matplotlib
+                echo -e "Installation [status]:${Green}installed${Reset}"
+        else
+                echo -e "Installation [status]:${Red}failed${Reset}"
+                echo -e "${Green}matplotlib is already installed${Reset} "
+         fi
+		 
 	elif [[ "${distro_family}" == "arch" ]]
 	then
 		#Installation de Tkinter
 		python3 -c "import tkinter" &> /dev/null
 		Test1=$?
 		echo -e "${Cyan}installation de tktinter...${Reset}"
-                if [[ ${Test1} -ne 0 ]]
+        if [[ ${Test1} -ne 0 ]]
 		then
-                        sudo pacman -S  tk
+            sudo pacman -S  tk
 			echo -e "${Green}Tkinter installed${Reset}"
-                	echo -e "Installation [status]:${Green}installed${Reset}"
-                else
-                        echo -e "Installation [status]:${Red}failed${Reset}"
-                        echo -e "${Green}Tkinter is already installed${Reset} "
-                fi    
+            echo -e "Installation [status]:${Green}installed${Reset}"
+        else
+            echo -e "Installation [status]:${Red}failed${Reset}"
+            echo -e "${Green}Tkinter is already installed${Reset} "
+        fi    
                 
 		#Installation de matplotlib 
 		python3 -c "import matplotlib" &>/dev/null
@@ -120,9 +121,9 @@ then
 	else
 		if [[ "$distro" == "debian" ]]
 		then
-			python3 -c "import tkinter" &> /dev/null
-                	Test1=$?
-               		echo -e "${Blue}installation de tktinter...${Reset}"
+					python3 -c "import tkinter" &> /dev/null
+            		Test1=$?
+            		echo -e "${Blue}installation de tktinter...${Reset}"
                		if [[ ${Test1} -ne 0 ]];then
                         	sudo apt update && sudo apt install  python3-tk
         	                echo -e "Installation [status]:${Green}installed${Reset}"
@@ -144,7 +145,7 @@ then
                		 fi
 
        		elif [[ "${distro}" == "arch" ]]
-		then
+			then
                 	python3 -c "import tkinter" &> /dev/null
                 	Test1=$?
                 	echo -e "${Cyan}installation de tktinter...${Reset}"
@@ -152,7 +153,7 @@ then
                         	sudo pacman -S  tk 
                         	echo -e "${Green}Tkinter installed${Reset}"
         	                echo -e "Installation [status]:${Green}installed${Reset}"
-          		else
+          			else
                         	echo -e "Installation [status]:${Red}failed${Reset}"
                         	echo -e "${Green}Tkinter is already installed${Reset} "
                		fi
@@ -172,7 +173,7 @@ then
                 	fi
 
        		elif [[ "$distro}" == "fedora" ]];
-		then
+			then
 
                		python -c "import tkinter" &> /dev/null
                 	Test1=$?
@@ -180,7 +181,7 @@ then
                 	if [[ $Test1 -ne 0 ]];then
                 	        sudo dnf install python3-tkinter
         	                echo -e "Installation [status]:${Green}installed${Reset}"
-          		else
+          			else
                         	echo -e "Installation [status]:${Red}failed${Reset}"
                         	echo -e "${Green}Tkinter is already installed${Reset} "
                		fi
@@ -195,11 +196,11 @@ then
         	        then
         	                sudo dnf install python3-matplotlib
         	                echo -e "Installation [status]:${Green}installed${Reset}"
-          		else
+          			else
                         	echo -e "Installation [status]:${Red}failed${Reset}"
                         	echo -e "${Green}matplotlib is already installed${Reset} "
                		fi
-                fi
+    fi
 	if [[ -f $home/Desktop/Linux_Burner.desktop ]];
 	then
 		rm $home/Desktop/Linux_Burner.desktop 
@@ -207,7 +208,7 @@ then
 		sudo chmod +x $home/Desktop/Linux_Burner.desktop
 	else
 		echo -e "[Desktop Entry]\nVersion=1.0\nType=Application\nName=LinuxBurner\nComment=System monitoring\nExec=python3 \$home/linu_burner/python/interface.py\nIcon=utilities-terminal\nTerminal=true" > $home/Desktop/Linux_Burner.desktop
-			sudo chmod +x $home/Desktop/Linux_Burner.desktop
+		sudo chmod +x $home/Desktop/Linux_Burner.desktop
 	fi
 	echo -e "${Red}
        	___ _   _ 
