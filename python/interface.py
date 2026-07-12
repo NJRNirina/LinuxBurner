@@ -183,8 +183,6 @@ def afficher_cpu():
         del update_cpu.historique
         del update_cpu.temps
         del update_cpu.compteur
-    for widget in main_frame_winfo_children():
-        widget.destroy()
         
     ax_graphique_cpu = None
 canvas_graphique_cpu = None
