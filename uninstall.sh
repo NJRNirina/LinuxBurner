@@ -49,7 +49,7 @@ then
         		echo -e "${Cyan}uninstallation de matplotlib...${Reset}"
         	    	if [[ ${Test2} -eq 0 ]];
          		then
-                		sudo -S apt purge python3-matplotlib <<< $PASS
+                		sudo -S apt purge python3-matplotlib python3-matplotlib-data <<< $PASS
                 	echo -e "matplotlib ${Red}uninstalled${Reset}"
             		else
             			echo -e "uninstall [status]:${Red}failed${Reset}"
@@ -100,8 +100,8 @@ then
         		echo -e "${Cyan}uninstalling matplotlib...${Reset}"
             		if [[ ${Test2} -eq 0 ]];
          		then
-                		sudo -S dnf remove --allowerasing python3-matplotlib <<< $PASS
-               			 echo -e "matplotlib ${Red}uninstalled${Reset}"
+                		sudo -S dnf purge  python3-matplotlib --autoremove <<< $PASS
+               			echo -e "matplotlib ${Red}uninstalled${Reset}"
             		else
             			echo -e "uninstall [status]:${Red}failed${Reset}"
             			echo -e "${Green}matplotlib is not found ${Reset} "
@@ -176,7 +176,7 @@ then
         	  	  	echo -e "${Cyan}uninstalling matplotlib...${Reset}"
                 		if [[ ${Test2} -eq 0 ]];
              			then
-                			sudo -S dnf remove --allowerasing python3-matplotlib <<< $PASS
+                			sudo -S dnf purge  python3-matplotlib --autoremove <<< $PASS
                     			echo -e "matplotlib ${Red}uninstalled${Reset}"
                 		else
             				echo -e "uninstall [status]:${Red}failed${Reset}"
