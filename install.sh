@@ -213,11 +213,11 @@ then
 			if [[ -f "$home/Desktop/Linux_Burner.desktop" ]];
 			then
 				rm $home/Desktop/Linux_Burner.desktop 
-				printf "[Desktop Entry]\nVersion=1.0\nType=Application\nName=LinuxBurner\nComment=System monitoring\nExec=bash -c \"cd %s/python && python3 interface.py\"\nIcon=$REP/assets/icones/monitoring.png\nTerminal=true" "$REP"  > $home/Desktop/Linux.Burner.desktop
+				printf "[Desktop Entry]\nVersion=1.0\nType=Application\nName=LinuxBurner\nComment=System monitoring\nExec=bash -c \"cd %s/python && python3 interface.py 2>/dev/null\"\nIcon=$REP/assets/icones/monitoring.png\nTerminal=true" "$REP"  > $home/Desktop/Linux.Burner.desktop
 				echo -e "${Yellow}Giving the right permission for the app ${Reset}"
 				sudo -S chmod +x $home/Desktop/Linux_Burner.desktop <<< $PASS
 			else
-				printf "[Desktop Entry]\nVersion=1.0\nType=Application\nName=LinuxBurner\nComment=System monitoring\nExec=bash -c \"cd %s/python && python3 interface.py\"\nIcon=$REP/assets/icones/monitoring.png\nTerminal=true" "$REP"  > $home/Desktop/Linux_Burner.desktop
+				printf "[Desktop Entry]\nVersion=1.0\nType=Application\nName=LinuxBurner\nComment=System monitoring\nExec=bash -c \"cd %s/python && python3 interface.py 2>/dev/null\"\nIcon=$REP/assets/icones/monitoring.png\nTerminal=true" "$REP"  > $home/Desktop/Linux_Burner.desktop
 				echo -e "${Yellow}Giving the right permission for the app${Reset}"
 				sudo -S chmod +x $home/Desktop/Linux_Burner.desktop <<< $PASS
 			fi
@@ -227,11 +227,11 @@ then
                         then
 
                                 rm $home/Bureau/Linux_Burner.bureau
-                                printf "[Desktop Entry]\nVersion=1.0\nType=Application\nName=LinuxBurner\nComment=System monitoring\nExec=bash -c \"cd %s/python && python3 interface.py\"\nIcon=$REP/assets/icones/monitoring.png\nTerminal=true" "$REP"  > $home/Bureau/Linux.Burner.bureau
+                                printf "[Desktop Entry]\nVersion=1.0\nType=Application\nName=LinuxBurner\nComment=System monitoring\nExec=bash -c \"cd %s/python && python3 interface.py 2>/dev/null\"\nIcon=$REP/assets/icones/monitoring.png\nTerminal=true" "$REP"  > $home/Bureau/Linux.Burner.bureau
                                 echo -e "${Yellow}Giving the right permission for the app ${Reset}"
                                 sudo -S chmod +x $home/Bureau/Linux_Burner.desktop <<< $PASS
                         else
-                                printf "[Desktop Entry]\nVersion=1.0\nType=Application\nName=LinuxBurner\nComment=System monitoring\nExec=bash -c \"cd %s/python && python3 interface.py\"\nIcon=$REP/assets/icones/monitoring.png\nTerminal=true" "$REP"  > $home/Bureau/Linux_Burner.desktop
+                                printf "[Desktop Entry]\nVersion=1.0\nType=Application\nName=LinuxBurner\nComment=System monitoring\nExec=bash -c \"cd %s/python && python3 interface.py 2>/dev/null\"\nIcon=$REP/assets/icones/monitoring.png\nTerminal=true" "$REP"  > $home/Bureau/Linux_Burner.desktop
                                 echo -e "${Yellow}Giving the right permission for the app${Reset}"
                                 sudo -S chmod +x $home/Bureau/Linux_Burner.desktop <<< $PASS
                         fi
