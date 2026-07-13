@@ -143,7 +143,7 @@ def update_ram ():
         update_ram.temps.pop(0)
     ligne_graphique.set_data(update_ram.temps, update_ram.historique) #met à jour la courbe
     #limite du graphique
-    # Remplacez la fin de update_ram par ceci :
+    
     try:
         if canvas_graphique and canvas_graphique.get_tk_widget().winfo_exists():
             ligne_graphique.set_data(update_ram.temps, update_ram.historique)
