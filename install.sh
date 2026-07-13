@@ -223,16 +223,16 @@ then
 			fi
 		elif [[ -d "$home/Bureau" ]];
 		then
-			if [[ -f "$home/Bureau/Linux_Burner.desktop" ]];
+			if [[ -f "$home/Bureau/Linux_Burner.bureau" ]];
                         then
-                                rm $home/Desktop/Linux_Burner.desktop
-                                printf "[Desktop Entry]\nVersion=1.0\nType=Application\nName=LinuxBurner\nComment=System monitoring\nExec=bash -c \"cd %s/python && python3 interface.py\"\nIcon=$REP/assets/icones/monitoring.png\nTerminal=true" "$REP"  > $home/Bureau/Linux.Burner.desktop
+                                rm $home/Desktop/Linux_Burner.bureau
+                                printf "[Desktop Entry]\nVersion=1.0\nType=Application\nName=LinuxBurner\nComment=System monitoring\nExec=bash -c \"cd %s/python && python3 interface.py\"\nIcon=$REP/assets/icones/monitoring.png\nTerminal=true" "$REP"  > $home/Bureau/Linux.Burner.bureau
                                 echo -e "${Yellow}Giving the right permission for the app ${Reset}"
-                                sudo -S chmod +x $home/Bureau/Linux_Burner.desktop <<< $PASS
+                                sudo -S chmod +x $home/Bureau/Linux_Burner.bureau <<< $PASS
                         else
-                                printf "[Desktop Entry]\nVersion=1.0\nType=Application\nName=LinuxBurner\nComment=System monitoring\nExec=bash -c \"cd %s/python && python3 interface.py\"\nIcon=$REP/assets/icones/monitoring.png\nTerminal=true" "$REP"  > $home/Bureau/Linux_Burner.desktop
+                                printf "[Desktop Entry]\nVersion=1.0\nType=Application\nName=LinuxBurner\nComment=System monitoring\nExec=bash -c \"cd %s/python && python3 interface.py\"\nIcon=$REP/assets/icones/monitoring.png\nTerminal=true" "$REP"  > $home/Bureau/Linux_Burner.bureau
                                 echo -e "${Yellow}Giving the right permission for the app${Reset}"
-                                sudo -S chmod +x $home/Bureau/Linux_Burner.desktop <<< $PASS
+                                sudo -S chmod +x $home/Bureau/Linux_Burner.bureau <<< $PASS
                         fi
 		fi
 
