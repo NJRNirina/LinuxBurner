@@ -41,7 +41,7 @@ then
 	#tools verification
 	if [[ -f /etc/os-release ]]
 	then
-		REP=`sudo find $home -name 'linu_burner' |head -n 1`
+		REP=`sudo find $home -name 'LinuxBurner' |head -n 1`
 
 		if [[ "${distro_family}" == "debian" || "${distro_family}" == "ubuntu" || "${distro_family}" == "ubuntu debian" ]];then
 			#Instaling Tkinter
@@ -225,8 +225,9 @@ then
 		then
 			if [[ -f "$home/Bureau/Linux_Burner.bureau" ]];
                         then
-                                rm $home/Bureau/Linux_Burner.desktop
-                                printf "[Desktop Entry]\nVersion=1.0\nType=Application\nName=LinuxBurner\nComment=System monitoring\nExec=bash -c \"cd %s/python && python3 interface.py\"\nIcon=$REP/assets/icones/monitoring.png\nTerminal=true" "$REP"  > $home/Bureau/Linux.Burner.desktop
+
+                                rm $home/Bureau/Linux_Burner.bureau
+                                printf "[Desktop Entry]\nVersion=1.0\nType=Application\nName=LinuxBurner\nComment=System monitoring\nExec=bash -c \"cd %s/python && python3 interface.py\"\nIcon=$REP/assets/icones/monitoring.png\nTerminal=true" "$REP"  > $home/Bureau/Linux.Burner.bureau
                                 echo -e "${Yellow}Giving the right permission for the app ${Reset}"
                                 sudo -S chmod +x $home/Bureau/Linux_Burner.desktop <<< $PASS
                         else
