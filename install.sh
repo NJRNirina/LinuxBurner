@@ -41,7 +41,7 @@ then
 	#tools verification
 	if [[ -f /etc/os-release ]]
 	then
-		REP=`sudo find $home -name 'linu_burner' |head -n 1`
+		REP=`sudo find $home -name 'LinuxBurner' |head -n 1`
 
 		if [[ "${distro_family}" == "debian" || "${distro_family}" == "ubuntu" || "${distro_family}" == "ubuntu debian" ]];then
 			#Instaling Tkinter
