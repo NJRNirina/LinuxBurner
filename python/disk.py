@@ -1,5 +1,29 @@
 import os
 import shutil
+import subprocess
+
+def get_partitions():
+    """
+    Équivalent de : df -h | grep /dev/ | awk '{print $1,$2}'  (voir projet1.sh)
+    Retourne un texte listant chaque partition /dev/ réelle avec sa taille.
+    """
+    try:
+        resultat = subprocess.run(["df", "-h"], capture_output=True, text=True, check=True)
+        lignes = resultat.stdout.splitlines()
+
+        partitions = []
+        for ligne in lignes:
+            if "/dev/" in ligne:
+                colonnes = ligne.split()
+                nom = colonnes[0]           # ex: /dev/sda2
+                taille = colonnes[1]        # ex: 500G
+                montage = colonnes[-1]      # ex: /
+                partitions.append(f"{nom} ({taille}) → {montage}")
+
+        return "\n".join(partitions) if partitions else "Aucune partition /dev/ trouvée."
+    except Exception as e:
+        print(f"Erreur get_partitions dans disk.py : {e}")
+        return "N/A"
 
 def get_disk():
     """
@@ -13,7 +37,7 @@ def get_disk():
         pourcentage = int((used / total) * 100)
         
         texte_utilisation = f"{used_go:.1f}G / {total_go:.1f}G"
-        texte_partitions = "/dev/sda2 (/)\n/dev/sda1 (/boot/efi)"
+        texte_partitions = get_partitions()
         alerte = pourcentage > 90
         
         return texte_partitions, texte_utilisation, pourcentage, alerte

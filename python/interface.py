@@ -438,16 +438,16 @@ def afficher_disk():
                            font=("Helvetica", 11, "bold"), command=parcourir_fichier, cursor="hand2", width=30)
     btn_parcourir.pack(pady=5)
 
-    entry_file = Entry(card_fichier, bg=black_background, fg=text_colors, bd=1, relief=SOLID, 
-                       highlightthickness=0, insertbackground="white", font=("Helvetica", 11), justify=CENTER, width=30)
+    entry_file = Entry(card_fichier, bg=black_background, fg=text_colors, bd=1, relief=SOLID,highlightthickness=0, insertbackground="white", font=("Helvetica", 11), justify=CENTER, width=70)
+    entry_file.pack(pady=5, padx=20, fill=X)
+
     # On l'insère de manière invisible ou discrète pour stocker le chemin
-    entry_file.pack(pady=5)
 
     result_frame = Frame(card_fichier, bg=second_fond)
     result_frame.pack(fill=X, padx=40, pady=10)
 
     Label(result_frame, text="Chemin Absolu :", bg=second_fond, fg=button_color_text, font=("Helvetica", 10)).grid(row=0, column=0, sticky=W, pady=2)
-    label_file_path1 = Label(result_frame, text="Aucun fichier sélectionné", bg=second_fond, fg=text_colors, font=("Fixedsys", 10))
+    label_file_path1 = Label(result_frame, text="Aucun fichier sélectionné", bg=second_fond, fg=text_colors, font=("Fixedsys", 10), wraplength=500, justify=LEFT)
     label_file_path1.grid(row=0, column=1, sticky=W, padx=10, pady=2)
 
     Label(result_frame, text="Taille Annotée :", bg=second_fond, fg=button_color_text, font=("Helvetica", 10)).grid(row=1, column=0, sticky=W, pady=2)

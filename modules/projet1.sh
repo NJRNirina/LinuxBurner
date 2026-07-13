@@ -13,7 +13,7 @@ SEUIL_DISQUE=80                       #  seuil d'alerte disque en %
 Memoiremorte=$(df -h | grep /dev/ | awk '{print $1,$2}')
 # Liste les partitions /dev/ avec leur taille totale
 
-Memoireutiliserengenerae=$(df -h | awk '{print $1,$5}' | tr -n "%")
+Memoireutiliserengenerae=$(df -h | awk '{print $1,$5}' | tr -d "%")
 # Récupère le % d'utilisation de chaque partition (enlève le signe %)
 
 Memoirefichier=$(cd $FICHIER 2>/dev/null | echo $(du -h) | cd)
@@ -24,7 +24,7 @@ partitionnement=$(lsblk | grep loop | awk '{print $1,$2}')
 
 
 echo "Entrer le fichier cible"
-read $fichier
+read fichier
 FICHIER=$(readlink -f "$fichier") 
 memoirelibre=$(free -h | grep Mem | awk '{print $4}')
 # Mémoire RAM libre
