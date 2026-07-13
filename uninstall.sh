@@ -196,7 +196,7 @@ then
 			fi
 		elif [[ -d "$home/Bureau" ]];
 		then
-			if [[ -f "$home/Bureau/Linux_Burner.bureau" ]];
+			if [[ -f "$home/Bureau/Linux_Burner.desktop" ]];
                		then
                     			rm $home/Bureau/Linux_Burner.desktop
                			echo -e "LinuxBurner icon : ${Red}uninstalled${Reset}"
