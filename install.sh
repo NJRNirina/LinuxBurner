@@ -1,4 +1,4 @@
-#!/bin/bash
+	#!/bin/bash
 #installing tools and checking dependecies
 home=$HOME
 #color_palet
@@ -34,13 +34,15 @@ echo -e "${Red}
 |___|_| \_|____/ |_/_/   \_\_____|_____/_/   \_\_| |___\___/|_| \_|${Reset}"
 
 echo -n "Plz enter your password for proceding to the installation : "
-read -s PASS
+read -s PASS 
 # verify if the password is correct
 if  echo "$PASS" | sudo -S -v  &>/dev/null ;
 then
 	#tools verification
 	if [[ -f /etc/os-release ]]
 	then
+		REP=`sudo find $home -name 'linu_burner' |head -n 1`
+
 		if [[ "${distro_family}" == "debian" || "${distro_family}" == "ubuntu" || "${distro_family}" == "ubuntu debian" ]];then
 			#Instaling Tkinter
 			python3 -c "import tkinter" &> /dev/null
@@ -207,22 +209,21 @@ then
                 	fi
 		#Creating an icon in the desktop
 
-		if [[ -f $home/Desktop/Linux_Burner.desktop ]];
+		if [[ -f "$home/Desktop/Linux_Burner.desktop" ]];
 		then
 			rm $home/Desktop/Linux_Burner.desktop 
-			printf "[Desktop Entry]\nVersion=1.0\nType=Application\nName=LinuxBurner\nComment=System monitoring\nExec=bash -c \"python3 %s/linu_burner/python/interface.py\"\nIcon=utilities-terminal\nTerminal=true" "$home" > $home/Desktop/Linux_Burner.desktop
+			printf "[Desktop Entry]\nVersion=1.0\nType=Application\nName=LinuxBurner\nComment=System monitoring\nExec=bash -c \"cd %s/python && python3 interface.py\"\nIcon=$REP/assets/icones/monitoring.png\nTerminal=true" "$REP"  > $home/Desktop/Linux.Burner.desktop
 			echo -e "${Yellow}Giving the right permission for the app ${Reset}"
 			sudo -S chmod +x $home/Desktop/Linux_Burner.desktop <<< $PASS
-			sleep 2
 		else
-			printf "[Desktop Entry]\nVersion=1.0\nType=Application\nName=LinuxBurner\nComment=System monitoring\nExec=bash -c \"python3 %s/linu_burner/python/interface.py\"\nIcon=utilities-terminal\nTerminal=true" "$home" > $home/Desktop/Linux_Burner.desktop
+			printf "[Desktop Entry]\nVersion=1.0\nType=Application\nName=LinuxBurner\nComment=System monitoring\nExec=bash -c \"cd %s/python && python3 interface.py\"\nIcon=$REP/assets/icones/monitoring.png\nTerminal=true" "$REP"  > $home/Desktop/Linux_Burner.desktop
 			echo -e "${Yellow}Giving the right permission for the app${Reset}"
 			sudo -S chmod +x $home/Desktop/Linux_Burner.desktop <<< $PASS
-			sleep 2
 		fi
 
 		echo -e "${Red}
-       	___ _   _ 
+	
+___ _   _ 
 		____ _____  _    _     _        _  _____ ___ ___  _   _ 
 |_ _| \ | / ___|_   _|/ \  | |   | |      / \|_   _|_ _/ _ \| \ | |
  | ||  \| \___ \ | | / _ \ | |   | |     / _ \ | |  | | | | |  \| |
