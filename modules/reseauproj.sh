@@ -10,7 +10,7 @@ RESET='\033[0m'
 
 #Etape 1:identité de la machine
 echo -e "\t${CYAN_VIF}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${RESET}"
-echo -e  "\t\t${CYAN_VIF}ETAPE 1: IDENTITÉ DE LA MACHINE${RESET}"
+echo -e  "\t\t${CYAN_VIF}I. IDENTITÉ DE LA MACHINE${RESET}"
 echo -e "\t${CYAN_VIF}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${RESET}"
 echo ""
 
@@ -54,7 +54,7 @@ echo ""
 
 #Etape 2:traffic réseau (octets reçus et envoyés)
 echo -e "\t${CYAN_VIF}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${RESET}"
-echo -e "\t\t${CYAN_VIF}ETAPE 2: TRAFFIC RESEAU (OCTETS REÇUS ET ENVOYÉS)${RESET}"
+echo -e "\t\t${CYAN_VIF}II. TRAFFIC RESEAU (OCTETS REÇUS ET ENVOYÉS)${RESET}"
 echo -e "\t${CYAN_VIF}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${RESET}"
 
 echo ""
@@ -76,7 +76,7 @@ echo ""
 
 #Etape 3:test connectivité
 echo -e "\t${CYAN_VIF}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${RESET}"
-echo -e "\t\t${CYAN_VIF}ETAPE 3: TEST CONNECTIVITÉ${RESET}"
+echo -e "\t\t${CYAN_VIF}III. TEST CONNECTIVITÉ${RESET}"
 echo -e "\t${CYAN_VIF}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${RESET}"
 
 echo ""
@@ -128,7 +128,7 @@ echo ""
 
 #étape 4:services en écoutes (ports et connexions)
 echo -e "\t${CYAN_VIF}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${RESET}"
-echo -e "\t\t${CYAN_VIF}ETAPE 4: SERVICES EN ÉCOUTE (PORTS OUVERTS ET CONNEXIONS ACTIVES)${RESET}"
+echo -e "\t\t${CYAN_VIF}IV. SERVICES EN ÉCOUTE (PORTS OUVERTS ET CONNEXIONS ACTIVES)${RESET}"
 echo -e "\t${CYAN_VIF}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${RESET}"
 echo ""
 #ports en écoute
