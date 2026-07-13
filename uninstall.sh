@@ -37,7 +37,7 @@ then
 			Test1=$?
 			echo -e "${Cyan}uninstalling  tktinter...${Reset}"
 			if [[ ${Test1} -eq 0 ]];then
-				sudo - S apt purge  python3-tk  <<< $PASS
+				sudo - S apt purge  --autoremove python3-tk tcl  <<< $PASS
                 		echo -e "Tkinter ${Red}uninstalled${Reset}"
             		else
                 		echo -e "uninstallation [status]:${Red}failed${Reset}"
@@ -49,7 +49,7 @@ then
         		echo -e "${Cyan}uninstallation de matplotlib...${Reset}"
         	    	if [[ ${Test2} -eq 0 ]];
          		then
-                		sudo -S apt purge python3-matplotlib python3-matplotlib-data <<< $PASS
+                		sudo -S apt purge --autoremove  python3-matplotlib  <<< $PASS
                 	echo -e "matplotlib ${Red}uninstalled${Reset}"
             		else
             			echo -e "uninstall [status]:${Red}failed${Reset}"
@@ -62,7 +62,7 @@ then
 			Test1=$?
 			echo -e "${Cyan}uninstall tktinter...${Reset}"
 			if [[ ${Test1} -eq 0 ]];then
-				sudo -S pacman -Rns tk <<< $PASS
+				sudo -S pacman -Rns tk tcl <<< $PASS
         	        	echo -e "Tkinter ${Red}uninstalled${Reset}"
             		else
                 		echo -e "uninstall [status]:${Red}failed${Reset}"
@@ -113,7 +113,7 @@ then
 			   	 Test1=$?
 			   	 echo -e "${Cyan}uninstalling  tktinter...${Reset}"
 				 if [[ ${Test1} -eq 0 ]];then
-				    	sudo -S apt purge  python3-tk <<< $PASS
+				    	sudo -S apt purge  python3-tk tcl <<< $PASS
                     			echo -e "Tkinter ${Red}uninstalled${Reset}"
                 		else
                     			echo -e "uninstallation [status]:${Red}failed${Reset}"
@@ -125,7 +125,7 @@ then
         	    		echo -e "${Cyan}uninstallation de matplotlib...${Reset}"
         	        	if [[ ${Test2} -eq 0 ]];
          		    	then
-                	    		sudo -S apt purge python3-matplotlib <<< $PASS
+                	    		sudo -S apt purge --autoremove python3-matplotlib <<< $PASS
                 	    		echo -e "matplotlib ${Red}uninstalled${Reset}"
                 		else
             	    			echo -e "uninstall [status]:${Red}failed${Reset}"
@@ -139,7 +139,7 @@ then
 				Test1=$?
 				echo -e "${Cyan}uninstall tktinter...${Reset}"
 				if [[ ${Test1} -eq 0 ]];then
-					sudo -S pacman -Rns tk <<< $PASS
+					sudo -S pacman -Rns tk tcl <<< $PASS
                     			echo -e "Tkinter ${Red}uninstalled${Reset}"
                 		else
                 	    		echo -e "uninstall [status]:${Red}failed${Reset}"
@@ -164,7 +164,7 @@ then
 			    	Test1=$?
 			    	echo -e "${Cyan}uninstall tktinter...${Reset}"
 			    	if [[ ${Test1} -eq 0 ]];then
-			    		sudo -S dnf remove --allowerasing python3-tkinter <<< $PASS
+			    		sudo -S dnf remove --allowerasing python3-tkinter tcl <<< $PASS
                     			echo -e "Tkinter ${Red}uninstalled${Reset}"
                 		else
                     			echo -e "uninstall [status]:${Red}failed${Reset}"
