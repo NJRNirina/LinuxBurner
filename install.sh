@@ -17,9 +17,9 @@ Reset="\e[0m"
 SINGINT()
 {
 	echo -e "\n${Red}INSTALLATION STOPPED${Reset}\nremoving unfinished installationion"
-	if sudo -S pacman -h <<</dev/null &>/dev/null;
+	if sudo -S pacman -h <<< $PSWD &>/dev/null;
 	then
-			yes|sudo -S pacman -Rns tk matplotlib <<<  $PASSWD &>/dev/null
+			yes|sudo pacman -Rns tk matplotlib &>/dev/null
 			echo -e "\nCLEANING"
         	echo -n -e "\r${Red}[==>               ]" && sleep 1
         	echo -n -e "\r[====>             ]" && sleep 1
@@ -28,9 +28,9 @@ SINGINT()
         	echo -n -e "\r[=================>]" && sleep 0.5
         	echo -n -e "\r[==================]${Reset}\n"
 			exit 2 #different error code 
-	elif command -v apt &>/dev/null;
+	elif command -v apt &>/dev/null || sudo -S apt -h <<< $PSWD ;
 	then 
-			yes|sudo -S apt purge python3-tk python3-matplotlib <<<  $PASSWD &>/dev/null
+			yes|sudo apt purge python3-tk python3-matplotlib &>/dev/null
 			echo -e "\nCLEANING"
         	echo -n -e "\r${Red}[==>               ]" && sleep 1
         	echo -n -e "\r[====>             ]" && sleep 1
@@ -39,10 +39,10 @@ SINGINT()
         	echo -n -e "\r[=================>]" && sleep 0.5
         	echo -n -e "\r[==================]${Reset}\n"
 			exit 2 #different error code
-	elif sudo dnf -h &>/dev/null;
+	elif sudo -S dnf -h  <<< $PSWD &>/dev/null;
 	then
 
-			yes|sudo -S dnf install python3-tkinter python3-matplotlib <<<  $PASSWD &>/dev/null
+			yes|sudo dnf install python3-tkinter python3-matplotlib &>/dev/null
 			echo -e "\nCLEANING"
         	echo -n -e "\r${Red}[==>               ]" && sleep 1
         	echo -n -e "\r[====>             ]" && sleep 1
@@ -60,7 +60,7 @@ echo " _     ___ _   _ _   ___  ______  _   _ ____  _   _ _____
 | |    | ||  \| | | | |\  /|  _ \| | | | |_) |  \| |  _| | |_) |
 | |___ | || |\  | |_| |/  \| |_) | |_| |  _ <| |\  | |___|  _ < 
 |_____|___|_| \_|\___//_/\_\____/ \___/|_| \_\_| \_|_____|_| \_\ "
-echo -e -n "Enter your password : "
+echo -e -n "Enter your ${Purple}password${Reset} : "
 read -s PSWD
 REP=$(sudo -S find $home -name "LinuxBurner" <<< $PSWD |head -1)
 echo
@@ -70,7 +70,7 @@ trap SINGINT INT
 if ping -c1 youtube.com &>/dev/null; #Youtube ihn mande ao am pianarana xD 
 #(youtube.com is the only way to check if the computer can have access to internet in our class)
 then
-		echo -e "${Blue}VERIFYING CONNEXION ACCESS${Reset}"
+	echo -e "${Blue}VERIFYING CONNEXION ACCESS${Reset}"
     	echo -n -e "\r${Cyan}[==>               ]" && sleep 1
     	echo -n -e "\r[====>             ]" && sleep 1
         echo -n -e "\r[=========>        ]" && sleep 1
@@ -78,7 +78,7 @@ then
 		echo -n -e "\r[=================>]" && sleep 0.5
     	echo -n -e "\r[==================]${Reset}\n"
 	#TESTING DISTRO 
-	if  sudo pacman -h <<< $PSWD &>/dev/null ; #verifying the distro family
+	if  sudo pacman -h  &>/dev/null ; #verifying the distro family
 	then
 		echo "INSTALLING TKINTER"
 		if python3 -c "import tkinter" &> /dev/null;then 
@@ -154,12 +154,12 @@ then
 					printf "[Desktop Entry]\nVersion=1.0\nType=Application\nName=LinuxBurner\nComment=System monitoring\nExec=bash -c \"cd %s/python && python3 interface.py 2>/dev/null\"\nIcon=$REP/assets/icones/monitoring.png\nTerminal=true" "$REP"  > $home/Desktop/Linux.Burner.desktop
 					echo -e "${Yellow}GIVING THE RIGHT PERMISSION TO THE APP ${Reset}"
 					sudo -S chmod +x $home/Desktop/Linux_Burner.desktop <<< $PASS
-					echo "ICON CREATED : ${Green}SUCESS${Reset}"
+					echo -e "ICON CREATED : ${Green}SUCESS${Reset}"
 				else
 					printf "[Desktop Entry]\nVersion=1.0\nType=Application\nName=LinuxBurner\nComment=System monitoring\nExec=bash -c \"cd %s/python && python3 interface.py 2>/dev/null\"\nIcon=$REP/assets/icones/monitoring.png\nTerminal=true" "$REP"  > $home/Desktop/Linux_Burner.desktop
 					echo -e "${Yellow}GIVING THE RIGHT PERMISSION TO THE APP ${Reset}"
 					sudo -S chmod +x $home/Desktop/Linux_Burner.desktop <<< $PASS
-					echo "ICON CREATED : ${Green}SUCESS${Reset}"
+					echo -e "ICON CREATED : ${Green}SUCESS${Reset}"
 				fi
 			elif [[ -d "$home/Bureau" ]];
 			then
@@ -170,18 +170,18 @@ then
                     	            printf "[Desktop Entry]\nVersion=1.0\nType=Application\nName=LinuxBurner\nComment=System monitoring\nExec=bash -c \"cd %s/python && python3 interface.py 2>/dev/null\"\nIcon=$REP/assets/icones/monitoring.png\nTerminal=true" "$REP"  > $home/Bureau/Linux.Burner.bureau
                         	        echo -e "${Yellow}GIVING THE RIGHT PERMISSION TO THE APP ${Reset}"
                             	    sudo -S chmod +x $home/Bureau/Linux_Burner.desktop <<< $PASS
-									echo "ICON CREATED : ${Green}SUCESS${Reset}"
+									echo -e "ICON CREATED : ${Green}SUCESS${Reset}"
                         	else
                         	        printf "[Desktop Entry]\nVersion=1.0\nType=Application\nName=LinuxBurner\nComment=System monitoring\nExec=bash -c \"cd %s/python && python3 interface.py 2>/dev/null\"\nIcon=$REP/assets/icones/monitoring.png\nTerminal=true" "$REP"  > $home/Bureau/Linux_Burner.desktop
                         	        echo -e "${Yellow}GIVING THE RIGHT PERMISSION TO THE APP ${Reset}"
                         	        sudo -S chmod +x $home/Bureau/Linux_Burner.desktop <<< $PASS
-									echo "ICON CREATED : ${Green}SUCESS${Reset}"
+									echo -e "ICON CREATED : ${Green}SUCESS${Reset}"
                         	fi
 				fi
 			fi
 		fi
 
-	elif command -v apt &>/dev/null;
+	elif command -v apt &>/dev/null || sudo -S apt --help  <<< $PSWD&>/dev/null;
 	then
 		echo "DEBIAN"
 		echo "INSTALLING TKINTER"
@@ -258,12 +258,12 @@ then
 					printf "[Desktop Entry]\nVersion=1.0\nType=Application\nName=LinuxBurner\nComment=System monitoring\nExec=bash -c \"cd %s/python && python3 interface.py 2>/dev/null\"\nIcon=$REP/assets/icones/monitoring.png\nTerminal=true" "$REP"  > $home/Desktop/Linux.Burner.desktop
 					echo -e "${Yellow}GIVING THE RIGHT PERMISSION TO THE APP ${Reset}"
 					sudo -S chmod +x $home/Desktop/Linux_Burner.desktop <<< $PASS
-					echo "ICON CREATED : ${Green}SUCESS${Reset}"
+					echo -e "ICON CREATED : ${Green}SUCESS${Reset}"
 				else
 					printf "[Desktop Entry]\nVersion=1.0\nType=Application\nName=LinuxBurner\nComment=System monitoring\nExec=bash -c \"cd %s/python && python3 interface.py 2>/dev/null\"\nIcon=$REP/assets/icones/monitoring.png\nTerminal=true" "$REP"  > $home/Desktop/Linux_Burner.desktop
 					echo -e "${Yellow}GIVING THE RIGHT PERMISSION TO THE APP ${Reset}"
 					sudo -S chmod +x $home/Desktop/Linux_Burner.desktop <<< $PASS
-					echo "ICON CREATED : ${Green}SUCESS${Reset}"
+					echo -e "ICON CREATED : ${Green}SUCESS${Reset}"
 				fi
 			elif [[ -d "$home/Bureau" ]];
 			then
@@ -274,16 +274,16 @@ then
                     	            printf "[Desktop Entry]\nVersion=1.0\nType=Application\nName=LinuxBurner\nComment=System monitoring\nExec=bash -c \"cd %s/python && python3 interface.py 2>/dev/null\"\nIcon=$REP/assets/icones/monitoring.png\nTerminal=true" "$REP"  > $home/Bureau/Linux.Burner.bureau
                         	        echo -e "${Yellow}GIVING THE RIGHT PERMISSION TO THE APP ${Reset}"
                             	    sudo -S chmod +x $home/Bureau/Linux_Burner.desktop <<< $PASS
-									echo "ICON CREATED : ${Green}SUCESS${Reset}"
+									echo -e "ICON CREATED : ${Green}SUCESS${Reset}"
                         	else
                         	        printf "[Desktop Entry]\nVersion=1.0\nType=Application\nName=LinuxBurner\nComment=System monitoring\nExec=bash -c \"cd %s/python && python3 interface.py 2>/dev/null\"\nIcon=$REP/assets/icones/monitoring.png\nTerminal=true" "$REP"  > $home/Bureau/Linux_Burner.desktop
                         	        echo -e "${Yellow}GIVING THE RIGHT PERMISSION TO THE APP ${Reset}"
                         	        sudo -S chmod +x $home/Bureau/Linux_Burner.desktop <<< $PASS
-									echo "ICON CREATED : ${Green}SUCESS${Reset}"
+									echo -e "ICON CREATED : ${Green}SUCESS${Reset}"
                         	fi
 				fi
 		fi
-	elif sudo dnf --help <<< $PSWD &>/dev/null;
+	elif sudo -S dnf --help <<< $PSWD &>/dev/null;
 	then
 		echo "FEDORA"
 		echo "INSTALLING TKINTER"
@@ -361,12 +361,12 @@ then
 					printf "[Desktop Entry]\nVersion=1.0\nType=Application\nName=LinuxBurner\nComment=System monitoring\nExec=bash -c \"cd %s/python && python3 interface.py 2>/dev/null\"\nIcon=$REP/assets/icones/monitoring.png\nTerminal=true" "$REP"  > $home/Desktop/Linux.Burner.desktop
 					echo -e "${Yellow}GIVING THE RIGHT PERMISSION TO THE APP ${Reset}"
 					sudo -S chmod +x $home/Desktop/Linux_Burner.desktop <<< $PASS
-					echo "ICON CREATED : ${Green}SUCESS${Reset}"
+					echo -e "ICON CREATED : ${Green}SUCESS${Reset}"
 				else
 					printf "[Desktop Entry]\nVersion=1.0\nType=Application\nName=LinuxBurner\nComment=System monitoring\nExec=bash -c \"cd %s/python && python3 interface.py 2>/dev/null\"\nIcon=$REP/assets/icones/monitoring.png\nTerminal=true" "$REP"  > $home/Desktop/Linux_Burner.desktop
 					echo -e "${Yellow}GIVING THE RIGHT PERMISSION TO THE APP ${Reset}"
 					sudo -S chmod +x $home/Desktop/Linux_Burner.desktop <<< $PASS
-					echo "ICON CREATED : ${Green}SUCESS${Reset}"
+					echo -e "ICON CREATED : ${Green}SUCESS${Reset}"
 				fi
 			elif [[ -d "$home/Bureau" ]];
 			then
@@ -377,12 +377,12 @@ then
                     	            printf "[Desktop Entry]\nVersion=1.0\nType=Application\nName=LinuxBurner\nComment=System monitoring\nExec=bash -c \"cd %s/python && python3 interface.py 2>/dev/null\"\nIcon=$REP/assets/icones/monitoring.png\nTerminal=true" "$REP"  > $home/Bureau/Linux.Burner.bureau
                         	        echo -e "${Yellow}GIVING THE RIGHT PERMISSION TO THE APP ${Reset}"
                             	    sudo -S chmod +x $home/Bureau/Linux_Burner.desktop <<< $PASS
-									echo "ICON CREATED : ${Green}SUCESS${Reset}"
+									echo -e "ICON CREATED : ${Green}SUCESS${Reset}"
                         	else
                         	        printf "[Desktop Entry]\nVersion=1.0\nType=Application\nName=LinuxBurner\nComment=System monitoring\nExec=bash -c \"cd %s/python && python3 interface.py 2>/dev/null\"\nIcon=$REP/assets/icones/monitoring.png\nTerminal=true" "$REP"  > $home/Bureau/Linux_Burner.desktop
                         	        echo -e "${Yellow}GIVING THE RIGHT PERMISSION TO THE APP ${Reset}"
                         	        sudo -S chmod +x $home/Bureau/Linux_Burner.desktop <<< $PASS
-									echo "ICON CREATED : ${Green}SUCESS${Reset}"
+									echo -e "ICON CREATED : ${Green}SUCESS${Reset}"
                         	fi
 				fi
 		fi
