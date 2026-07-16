@@ -16,7 +16,7 @@ Reset="\e[0m"
 #THIS FUNCTION IS USED TO TRAP SINGINT(CTRL + C zan xD)
 SINGINT()
 {
-	echo -e "\n${Red}INSTALLATION STOPPED${Reset}\nremoving unfinished installationion"
+	echo -e "\n${Red}INSTALLATION STOPPED${Reset}\nremoving unfinished installation"
 	if sudo -S pacman -h <<< $PSWD &>/dev/null;
 	then
 			yes|sudo pacman -Rns tk matplotlib &>/dev/null
@@ -216,7 +216,7 @@ then
                         echo -n -e "\r... " && sleep 0.5
                         echo -e  "\r......\n${Reset}"
 		else
-			yes|sudo apt update &>/dev/null && yes|sudo pacman apt install python3-tk &>/dev/null
+			yes|sudo apt update &>/dev/null && yes|sudo apt install python3-tk &>/dev/null
                         echo -e "UPDATING"
                         echo -n -e "\r${Red}[==>               ]" && sleep 1
                         echo -n -e "\r[====>             ]" && sleep 1
