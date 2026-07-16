@@ -37,7 +37,7 @@ then
 			Test1=$?
 			echo -e "${Cyan}uninstalling  tktinter...${Reset}"
 			if [[ ${Test1} -eq 0 ]];then
-				sudo - S apt purge  --autoremove python3-tk  <<< $PASS
+				sudo -S apt purge  --autoremove python3-tk  <<< $PASS
                 		echo -e "Tkinter ${Red}uninstalled${Reset}"
             		else
                 		echo -e "uninstallation [status]:${Red}failed${Reset}"
