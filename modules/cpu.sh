@@ -17,7 +17,7 @@ zones=(/sys/class/thermal/thermal_zone*)
 line=${#zones[@]}
 for ((i=0; i<core; i++))
 do
-    # On vérifie si c'est bien une zone CPU (souvent de type x86_pkg_temp ou coretemp)
+    # verification du zone cpu
 		if [ -f "/sys/class/thermal/thermal_zone$i/temp" ]; then
         		temp_brute=$(cat /sys/class/thermal/thermal_zone$i/temp)
        			 # division par 1000 car on a un temperature en millidegre C
@@ -26,7 +26,6 @@ do
      			   cpu_heat[$i]="0"
     	fi
 done
-# Affichage final sur une seule ligne
 printf "%s|%s|%s %%|" "$Model" "$core" "$cpu_usage"
 
 for ((i=0; i<core; i++))
