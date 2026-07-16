@@ -123,7 +123,7 @@ then
 			echo -e "...\n${Reset}"
 		else
 			echo "INSTALLING MATPLOTLIB"
-			yes| sudo pacman -Sy  &> /dev/null && yes |sudo pacman -S python-matplotlib &>/dev/null
+			yes |sudo pacman -S python-matplotlib &>/dev/null
 			echo "CHECKING FOR DEPENCIES"
 			echo -n -e "\r${Cyan}[==>               ]" && sleep 1
                         echo -n -e "\r[====>             ]" && sleep 1
@@ -252,7 +252,7 @@ then
 			echo -e "...\n${Reset}"
 		else
 			echo "INSTALLING MATPLOTLIB"
-			yes| sudo apt update  &> /dev/null && yes |sudo apt install python3-matplotlib &>/dev/null
+			yes |sudo apt install python3-matplotlib &>/dev/null
 			echo "CHECKING FOR DEPENCIES"
 			echo -n -e "\r${Cyan}[==>               ]" && sleep 1
                         echo -n -e "\r[====>             ]" && sleep 1
@@ -379,7 +379,7 @@ then
 			echo -e "...\n"
 		else
 			echo "INSTALLING MATPLOTLIB"
-			yes| sudo dnf update  &> /dev/null && yes |sudo dnf install python3-matplotlib &>/dev/null
+			yes |sudo dnf install python3-matplotlib &>/dev/null
 			echo "CHECKING FOR DEPENCIES"
 			echo -n -e "\r${Cyan}[==>               ]" && sleep 1
                         echo -n -e "\r[====>             ]" && sleep 1
