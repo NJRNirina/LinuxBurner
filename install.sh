@@ -42,7 +42,7 @@ SINGINT()
 	elif sudo -S dnf -h  <<< $PSWD &>/dev/null;
 	then
 
-			yes|sudo dnf install python3-tkinter python3-matplotlib &>/dev/null
+			yes|sudo dnf purge python3-tkinter python3-matplotlib &>/dev/null
 			echo -e "\nCLEANING"
         	echo -n -e "\r${Red}[==>               ]" && sleep 1
         	echo -n -e "\r[====>             ]" && sleep 1
@@ -204,7 +204,6 @@ then
 									echo -e "ICON CREATED : ${Green}SUCESS${Reset}"
                         	fi
 				fi
-			fi
 		fi
 
 	elif command -v apt &>/dev/null || sudo -S apt --help  <<< $PSWD&>/dev/null;
@@ -462,6 +461,7 @@ then
 									echo -e "ICON CREATED : ${Green}SUCESS${Reset}"
                         	fi
 				fi
+			fi
 		fi
 else
 	echo -e "${Blue}VERIFYING CONNEXION ACCESS${Reset}"
