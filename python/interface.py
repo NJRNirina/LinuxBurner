@@ -10,7 +10,6 @@ from ram import get_ram
 from cpu import get_cpu
 from disk import get_disk, get_file_info
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
-from cpu import get_cpu
 from reseau import get_reseau
 import threading 
 from tkinter import scrolledtext
@@ -169,24 +168,6 @@ def fermeture():
     window.quit()
     window.destroy()
     window.protocol("WM_DELETE_WINDOW", fermeture)
-
-def afficher_cpu():
-    global label_Model,label_Core,Label_Usage,label_Heat,label_proces
-    global main_frame
-    global running,after_id
-    running=False
-    if after_id is not None:
-        window.after_cancel(after_id)
-        after_id = None
-    if hasattr(update_cpu,"historique"):
-        del update_cpu.historique
-        del update_cpu.temps
-        del update_cpu.compteur
-        
-    ax_graphique_cpu = None
-canvas_graphique_cpu = None
-ligne_graphique_cpu = None
-fig_cpu = plt.figure(figsize=(8,3), dpi=100, facecolor=black_background)
 
 
 # Variables globales pour le graphique du CPU
@@ -523,7 +504,6 @@ def update_disk():
     after_id = window.after(1000, update_disk)
 
 #reseau
-import re
 
 ANSI_VERS_COULEUR = {
     "0;31": "#FF5C5C", "0;32": "#4CD964", "1;33": "#FFD34D",
