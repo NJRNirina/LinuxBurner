@@ -20,10 +20,10 @@ do
     # verification du zone cpu
 		if [ -f "/sys/class/thermal/thermal_zone$i/temp" ]; then
         		temp_brute=$(cat /sys/class/thermal/thermal_zone$i/temp)
-       			 # division par 1000 car on a un temperature en millidegre C
-       			 cpu_heat[$i]=$((temp_brute / 1000))
+       			# division par 1000 car on a un temperature en millidegre C
+       			cpu_heat[$i]=$((temp_brute / 1000))
     		else
-     			   cpu_heat[$i]="0"
+     			cpu_heat[$i]="0"
     	fi
 done
 printf "%s|%s|%s %%|" "$Model" "$core" "$cpu_usage"
