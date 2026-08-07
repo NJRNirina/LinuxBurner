@@ -13,7 +13,6 @@ declare -a cpu_heat
 		cpu_usage=$(top -bn2 -d 0.5|grep "Cpu(s)"|tail -1|awk '{print $2}')
 		cpu_usage=${cpu_usage%.* } #suppression decimale
 #utilisation des informations sur /sys/class/thermal/)
-zones=(/sys/class/thermal/thermal_zone*)
 for ((i=0; i<core; i++))
 do
     # verification du zone cpu
