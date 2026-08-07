@@ -14,7 +14,6 @@ declare -a cpu_heat
 		cpu_usage=${cpu_usage%.* } #suppression decimale
 #utilisation des informations sur /sys/class/thermal/)
 zones=(/sys/class/thermal/thermal_zone*)
-line=${#zones[@]}
 for ((i=0; i<core; i++))
 do
     # verification du zone cpu
